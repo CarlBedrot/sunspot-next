@@ -23,6 +23,7 @@ export function SunspotMap() {
   const [greenAreas, setGreenAreas] = useState<GreenArea[]>([])
   const [weather, setWeather] = useState<WeatherSnapshot | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [daylight, setDaylight] = useState(true)
 
   useEffect(() => {
     let cancelled = false
@@ -32,6 +33,7 @@ export function SunspotMap() {
         const now = new Date()
         const center = { lat: COPENHAGEN_CENTER[0], lng: COPENHAGEN_CENTER[1] }
         const sun = getSunPosition(now, center)
+        setDaylight(sun.altitude > 0)
 
         const [buildingsResult, benchesResult, greenAreasResult, weatherResult] = await Promise.allSettled([
           fetchBuildings(COPENHAGEN_BBOX),
@@ -90,6 +92,11 @@ export function SunspotMap() {
   return (
     <div className="sunspot-map">
       {error && <div className="sunspot-map__error">Couldn&apos;t load data: {error}</div>}
+      {!daylight && (
+        <div className="sunspot-map__night-notice">
+          Sun is below the horizon — sun/shadow view unavailable.
+        </div>
+      )}
       <WeatherBadge weather={weather} />
       <MapContainer center={COPENHAGEN_CENTER} zoom={15} className="sunspot-map__container">
         <TileLayer
@@ -97,7 +104,7 @@ export function SunspotMap() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ShadowLayer shadows={shadows} />
-        <SunSpotLayer benches={benches} greenAreas={greenAreas} shadows={shadows} />
+        <SunSpotLayer benches={benches} greenAreas={greenAreas} shadows={shadows} daylight={daylight} />
       </MapContainer>
       <AttributionFooter />
     </div>

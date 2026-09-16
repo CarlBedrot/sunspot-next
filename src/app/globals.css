@@ -42,6 +42,11 @@ a {
   text-decoration: none;
 }
 
+.attribution-footer a {
+  color: #1a5fb4;
+  text-decoration: underline;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -89,4 +94,11 @@ html, body {
   background: #fff;
   border-top: 1px solid #ddd;
   color: #555;
+}
+
+.sunspot-map__night-notice {
+  padding: 0.5rem 1rem;
+  background: #1f2933;
+  color: #e4e7eb;
+  font-size: 0.85rem;
 }

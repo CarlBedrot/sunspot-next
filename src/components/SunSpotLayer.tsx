@@ -1,24 +1,32 @@
 'use client'
 
+import { useMemo } from 'react'
 import { CircleMarker, Polygon as LeafletPolygon } from 'react-leaflet'
 import type { Bench, GreenArea, ShadowFeature } from '@/lib/types'
-import { classifyGreenArea, isBenchSunny } from '@/lib/sunspots'
+import { buildShadowPolygons, classifyGreenArea, isBenchSunny } from '@/lib/sunspots'
 
 export function SunSpotLayer({
   benches,
   greenAreas,
   shadows,
+  daylight,
 }: {
   benches: Bench[]
   greenAreas: GreenArea[]
   shadows: ShadowFeature[]
+  daylight: boolean
 }) {
-  const classifiedAreas = greenAreas.map((area) => classifyGreenArea(area, shadows))
+  const shadowPolygons = useMemo(() => buildShadowPolygons(shadows), [shadows])
+
+  const classifiedAreas = greenAreas.map((area) => ({
+    area,
+    sunny: daylight && classifyGreenArea(area, shadowPolygons).sunny,
+  }))
 
   return (
     <>
       {benches.map((bench) => {
-        const sunny = isBenchSunny(bench, shadows)
+        const sunny = daylight && isBenchSunny(bench, shadowPolygons)
         return (
           <CircleMarker
             key={bench.id}
