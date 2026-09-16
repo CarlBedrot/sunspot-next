@@ -33,7 +33,7 @@ export function SunspotMap() {
         const center = { lat: COPENHAGEN_CENTER[0], lng: COPENHAGEN_CENTER[1] }
         const sun = getSunPosition(now, center)
 
-        const [buildingsResult, benchesResult, greenAreasResult, weatherResult] = await Promise.all([
+        const [buildingsResult, benchesResult, greenAreasResult, weatherResult] = await Promise.allSettled([
           fetchBuildings(COPENHAGEN_BBOX),
           fetchBenches(COPENHAGEN_BBOX),
           fetchGreenAreas(COPENHAGEN_BBOX),
@@ -42,16 +42,38 @@ export function SunspotMap() {
 
         if (cancelled) return
 
-        const projectedShadows: ShadowFeature[] = []
-        for (const building of buildingsResult as Building[]) {
-          const shadow = projectShadow(building, sun)
-          if (shadow) projectedShadows.push(shadow)
+        const failures: string[] = []
+
+        if (buildingsResult.status === 'fulfilled') {
+          const projectedShadows: ShadowFeature[] = []
+          for (const building of buildingsResult.value as Building[]) {
+            const shadow = projectShadow(building, sun)
+            if (shadow) projectedShadows.push(shadow)
+          }
+          setShadows(projectedShadows)
+        } else {
+          failures.push(`buildings: ${buildingsResult.reason instanceof Error ? buildingsResult.reason.message : 'Failed to load'}`)
         }
 
-        setShadows(projectedShadows)
-        setBenches(benchesResult)
-        setGreenAreas(greenAreasResult)
-        setWeather(weatherResult)
+        if (benchesResult.status === 'fulfilled') {
+          setBenches(benchesResult.value)
+        } else {
+          failures.push(`benches: ${benchesResult.reason instanceof Error ? benchesResult.reason.message : 'Failed to load'}`)
+        }
+
+        if (greenAreasResult.status === 'fulfilled') {
+          setGreenAreas(greenAreasResult.value)
+        } else {
+          failures.push(`green areas: ${greenAreasResult.reason instanceof Error ? greenAreasResult.reason.message : 'Failed to load'}`)
+        }
+
+        if (weatherResult.status === 'fulfilled') {
+          setWeather(weatherResult.value)
+        } else {
+          failures.push(`weather: ${weatherResult.reason instanceof Error ? weatherResult.reason.message : 'Failed to load'}`)
+        }
+
+        setError(failures.length > 0 ? failures.join('; ') : null)
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Failed to load map data')
