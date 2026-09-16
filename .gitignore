@@ -40,5 +40,8 @@ pnpm-debug.log*
 .DS_Store
 *.pem
 
+# Claude Code session state
+.claude/
+
 # Testing
 coverage/
