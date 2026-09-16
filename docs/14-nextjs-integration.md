@@ -26,7 +26,7 @@ The original Next map is kept at `/lab`, with scoped map styles. Original bench 
 
 The main map includes categories, complete filter reset, Touchgrass, time-bound real and optional demo events, forecasts, invitation/RSVP flows, seating-point editing and solar warnings. Data attribution and the supplied palette are retained.
 
-Before deployment with invitations on Vercel: replace SQLite with shared durable storage, carry over schema/authorization semantics, and use a distributed request limiter. No database provisioning, production deployment or merge is part of this branch. The separate `/api/events` route now reads the public library feed and curated examples; see [event integration](15-eventkallor.md). Google Places, background push, accounts and real booking remain outside the prototype.
+Before deployment with invitations on Vercel: replace SQLite with shared durable storage, carry over schema/authorization semantics, and use a distributed request limiter. No shared database provisioning or merge is included. A later private Vercel test deployment is documented in [deployment notes](16-private-deployment.md). The separate `/api/events` route now reads the public library feed and curated examples; see [event integration](15-eventkallor.md). Google Places, background push, accounts and real booking remain outside the prototype.
 
 ## Verification
 

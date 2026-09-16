@@ -1,0 +1,13 @@
+# Keep local state, credentials and development artifacts off deployments.
+.git
+.vercel
+node_modules
+.next
+.data
+artifacts
+coverage
+.env*
+*.pem
+*.log
+.DS_Store
+.claude

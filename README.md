@@ -43,11 +43,19 @@ npm run test:events      # event feed, mobile details and timeline behaviour
 
 For browser tests, install Chromium with `npx playwright install chromium`, or set `SUNSPOT_BROWSER_PATH` to an existing Chrome executable. Override the app URL with `SUNSPOT_URL=http://localhost:4174`. Tests create and cancel their own local invitations.
 
+## Private mobile test deployment
+
+[Open SunSpot](https://sunspot-private.vercel.app/) and log in with an authorized Vercel account. Project `sunspot-private` uses Vercel Authentication for **all deployments**, including its production alias. This is a private test deployment; the computer running the local app can be turned off.
+
+Map, solar analysis, weather and events are available. Invitations return 503 until shared durable storage is connected. The existing local invitation database is not uploaded. `.vercelignore` excludes local state, credentials and screenshots. Vercel project linking and authentication are local and ignored by Git; this deployment is not connected to automatic Git publishing.
+
+For an authorized maintainer with the existing project linked, `vercel deploy` creates a preview and `vercel deploy --prod` updates the stable alias. Keep deployment protection enabled. [Deployment notes](docs/16-private-deployment.md).
+
 ## Runtime and deployment
 
 Use `npm run build && npm start` on a Node server with writable **persistent storage**. `SUNSPOT_DATA_DIR` can select an absolute path on that disk. Set `SUNSPOT_PUBLIC_ORIGIN` to the public origin when running behind a reverse proxy so mutation-origin checks use the correct host and scheme. The local SQLite pilot targets one server and has a shared API request budget of 100 requests/minute per process.
 
-**Invitations are not ready for Vercel deployment.** The Vercel runtime explicitly returns a useful 503 response for invitation APIs rather than storing them in a temporary filesystem. Map, solar analysis, events and forecasts do not require invitation storage. A shared database and distributed rate limiter are the next deployment work; no hosting or paid resources are provisioned by this integration.
+**Invitations are not ready for Vercel deployment.** The Vercel runtime explicitly returns a useful 503 response for invitation APIs rather than storing them in a temporary filesystem. Map, solar analysis, events and forecasts do not require invitation storage. A shared database and distributed rate limiter are the next deployment work; the private Vercel test deployment does not provision a shared database.
 
 ## Accuracy and sources
 
