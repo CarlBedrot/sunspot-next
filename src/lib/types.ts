@@ -41,7 +41,7 @@ export interface WeatherSnapshot {
 }
 
 export interface SunPosition {
-  /** Radians, 0 = north, clockwise (suncalc convention: 0 = south). */
+  /** Radians, compass bearing from north, clockwise (0 = N, PI/2 = E, PI = S, 3*PI/2 = W). */
   azimuth: number
   /** Radians above horizon; <= 0 means sun is below horizon. */
   altitude: number

@@ -71,8 +71,8 @@ describe('projectShadow', () => {
   })
 
   it('projects a shadow polygon that encloses the original footprint', () => {
-    // Sun due south (suncalc azimuth 0 = south), 45 degrees up -> shadow length == height, pointing north.
-    const sun: SunPosition = { azimuth: 0, altitude: Math.PI / 4 }
+    // Sun due south (azimuth = PI under north-clockwise convention), 45 degrees up -> shadow length == height, pointing north.
+    const sun: SunPosition = { azimuth: Math.PI, altitude: Math.PI / 4 }
     const shadow = projectShadow(squareBuilding, sun)
     expect(shadow).not.toBeNull()
     expect(shadow!.buildingId).toBe('b1')
@@ -83,5 +83,23 @@ describe('projectShadow', () => {
     const last = shadow!.polygon[shadow!.polygon.length - 1]
     expect(first[0]).toBeCloseTo(last[0], 6)
     expect(first[1]).toBeCloseTo(last[1], 6)
+  })
+
+  it('chains getSunPosition into projectShadow and points the shadow roughly north at summer solar noon', () => {
+    // Copenhagen, Jun 21 2026, 11:00 UTC ~= local solar noon -> sun roughly south and high.
+    const noon = new Date('2026-06-21T11:00:00Z')
+    const copenhagen: LatLng = { lat: 55.6761, lng: 12.5683 }
+    const sun = getSunPosition(noon, copenhagen)
+
+    const shadow = projectShadow(squareBuilding, sun)
+    expect(shadow).not.toBeNull()
+
+    const originalCentroidLat =
+      squareBuilding.footprint.reduce((sum, [, lat]) => sum + lat, 0) / squareBuilding.footprint.length
+    const shadowCentroidLat =
+      shadow!.polygon.reduce((sum, [, lat]) => sum + lat, 0) / shadow!.polygon.length
+
+    // Sun roughly south at solar noon -> shadow should shift roughly north (increasing latitude).
+    expect(shadowCentroidLat).toBeGreaterThan(originalCentroidLat)
   })
 })

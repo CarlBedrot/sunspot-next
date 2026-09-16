@@ -20,7 +20,10 @@ export function resolveHeight(
 
 export function getSunPosition(date: Date, location: LatLng): SunPosition {
   const pos = SunCalc.getPosition(date, location.lat, location.lng)
-  return { azimuth: pos.azimuth, altitude: pos.altitude }
+  return {
+    azimuth: (pos.azimuth * Math.PI) / 180,
+    altitude: (pos.altitude * Math.PI) / 180,
+  }
 }
 
 const EARTH_RADIUS_METERS = 6378137
@@ -41,10 +44,8 @@ export function projectShadow(building: Building, sun: SunPosition): ShadowFeatu
 
   const shadowLength = building.heightMeters / Math.tan(sun.altitude)
 
-  // suncalc azimuth: 0 = south, positive = west. Shadow points opposite the sun,
-  // i.e. away from the sun's direction, converted to a compass bearing from north.
-  const sunBearingFromNorth = sun.azimuth + Math.PI
-  const shadowBearing = sunBearingFromNorth + Math.PI
+  // sun.azimuth is a compass bearing from north, clockwise; the shadow points opposite the sun.
+  const shadowBearing = sun.azimuth + Math.PI
 
   const dxMeters = shadowLength * Math.sin(shadowBearing)
   const dyMeters = shadowLength * Math.cos(shadowBearing)
