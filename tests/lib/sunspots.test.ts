@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isBenchSunny, classifyGreenArea } from '../../src/lib/sunspots'
+import { buildShadowPolygons, isBenchSunny, classifyGreenArea } from '../../src/lib/sunspots'
 import type { Bench, GreenArea, ShadowFeature } from '../../src/lib/types'
 
 const shadowOverBench: ShadowFeature = {
@@ -16,17 +16,17 @@ const shadowOverBench: ShadowFeature = {
 describe('isBenchSunny', () => {
   it('is false when the bench sits inside a shadow polygon', () => {
     const bench: Bench = { id: 'n1', location: { lat: 55.6762, lng: 12.5685 } }
-    expect(isBenchSunny(bench, [shadowOverBench])).toBe(false)
+    expect(isBenchSunny(bench, buildShadowPolygons([shadowOverBench]))).toBe(false)
   })
 
   it('is true when the bench sits outside every shadow polygon', () => {
     const bench: Bench = { id: 'n2', location: { lat: 55.7000, lng: 12.6000 } }
-    expect(isBenchSunny(bench, [shadowOverBench])).toBe(true)
+    expect(isBenchSunny(bench, buildShadowPolygons([shadowOverBench]))).toBe(true)
   })
 
   it('is true when there are no shadows at all', () => {
     const bench: Bench = { id: 'n3', location: { lat: 55.6762, lng: 12.5685 } }
-    expect(isBenchSunny(bench, [])).toBe(true)
+    expect(isBenchSunny(bench, buildShadowPolygons([]))).toBe(true)
   })
 })
 
@@ -42,7 +42,7 @@ describe('classifyGreenArea', () => {
         [12.5683, 55.6761],
       ],
     }
-    const result = classifyGreenArea(area, [shadowOverBench])
+    const result = classifyGreenArea(area, buildShadowPolygons([shadowOverBench]))
     expect(result.sunny).toBe(false)
     expect(result.area).toBe(area)
   })
@@ -58,7 +58,7 @@ describe('classifyGreenArea', () => {
         [12.6000, 55.7000],
       ],
     }
-    const result = classifyGreenArea(area, [shadowOverBench])
+    const result = classifyGreenArea(area, buildShadowPolygons([shadowOverBench]))
     expect(result.sunny).toBe(true)
   })
 })

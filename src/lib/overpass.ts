@@ -26,7 +26,10 @@ async function runOverpassQuery(query: string): Promise<OverpassElement[]> {
     body: query,
   })
   if (!response.ok) {
-    throw new Error(`Overpass query failed: ${response.status} ${response.statusText}`)
+    const body = await response.text().catch(() => '')
+    throw new Error(
+      `Overpass query failed: ${response.status} ${response.statusText}${body ? ` — ${body}` : ''}`
+    )
   }
   const data = (await response.json()) as OverpassResponse
   return data.elements
@@ -38,7 +41,13 @@ function bboxToOverpass(bbox: Bbox): string {
 
 function wayToRing(el: OverpassElement): [number, number][] | null {
   if (!el.geometry || el.geometry.length < 3) return null
-  return el.geometry.map((pt) => [pt.lon, pt.lat] as [number, number])
+  const ring = el.geometry.map((pt) => [pt.lon, pt.lat] as [number, number])
+  const first = ring[0]
+  const last = ring[ring.length - 1]
+  if (first[0] !== last[0] || first[1] !== last[1]) {
+    ring.push(first)
+  }
+  return ring.length >= 4 ? ring : null
 }
 
 export async function fetchBuildings(bbox: Bbox): Promise<Building[]> {

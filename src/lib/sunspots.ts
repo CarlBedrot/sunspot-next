@@ -1,21 +1,27 @@
 import { booleanPointInPolygon, centroid, point, polygon } from '@turf/turf'
+import type { Feature, Polygon } from 'geojson'
 import type { Bench, GreenArea, ShadowFeature } from './types'
 
-function isPointInAnyShadow(pt: [number, number], shadows: ShadowFeature[]): boolean {
-  const turfPoint = point(pt)
-  return shadows.some((shadow) => booleanPointInPolygon(turfPoint, polygon([shadow.polygon])))
+/** Builds a turf polygon feature for each shadow once, for reuse across many point-in-polygon tests. */
+export function buildShadowPolygons(shadows: ShadowFeature[]): Feature<Polygon>[] {
+  return shadows.map((shadow) => polygon([shadow.polygon]))
 }
 
-export function isBenchSunny(bench: Bench, shadows: ShadowFeature[]): boolean {
+function isPointInAnyShadow(pt: [number, number], shadowPolygons: Feature<Polygon>[]): boolean {
+  const turfPoint = point(pt)
+  return shadowPolygons.some((shadowPolygon) => booleanPointInPolygon(turfPoint, shadowPolygon))
+}
+
+export function isBenchSunny(bench: Bench, shadowPolygons: Feature<Polygon>[]): boolean {
   const pt: [number, number] = [bench.location.lng, bench.location.lat]
-  return !isPointInAnyShadow(pt, shadows)
+  return !isPointInAnyShadow(pt, shadowPolygons)
 }
 
 export function classifyGreenArea(
   area: GreenArea,
-  shadows: ShadowFeature[]
+  shadowPolygons: Feature<Polygon>[]
 ): { area: GreenArea; sunny: boolean } {
   const areaCentroid = centroid(polygon([area.polygon]))
   const pt = areaCentroid.geometry.coordinates as [number, number]
-  return { area, sunny: !isPointInAnyShadow(pt, shadows) }
+  return { area, sunny: !isPointInAnyShadow(pt, shadowPolygons) }
 }
