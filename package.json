@@ -2,6 +2,7 @@
   "name": "sunspot",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -19,7 +20,6 @@
     "suncalc": "^2.0.2"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.3.3",
     "@types/leaflet": "^1.9.22",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -27,7 +27,6 @@
     "@vitejs/plugin-react": "^6.1.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
-    "jsdom": "^30.0.1",
     "typescript": "^5",
     "vite": "^8.3.0",
     "vitest": "^5.0.1"
