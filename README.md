@@ -24,7 +24,7 @@ No API keys are required for the local pilot. Invitations and the MET Norway wea
 - Full-screen map, mobile controls and a continuous seven-day time slider.
 - Touchgrass, bar, restaurant and event filters; partial shade does not exclude an entire park.
 - 163 places, 139 OSM park areas and a building-shadow model with 19,523 buildings. The solar analysis runs in a Web Worker and follows the selected time.
-- Time-bound, explicitly fictional demo events. No real event provider is connected.
+- Real events from Københavns Biblioteker, plus a curated Luma example, with a weekly discovery list and rich event details. Markers follow event start/end times; fictional demo events are optional and off by default.
 - MET Norway forecasts for the selected time, invitations, guest RSVPs and host cancellation.
 - Editable seating points and in-app solar warnings. System notifications require user activation and a running app; this is not background push.
 
@@ -38,6 +38,7 @@ npm run lint
 npm run build
 npm run test:browser     # requires a running app on port 3000
 npm run test:solar
+npm run test:events      # event feed, mobile details and timeline behaviour
 ```
 
 For browser tests, install Chromium with `npx playwright install chromium`, or set `SUNSPOT_BROWSER_PATH` to an existing Chrome executable. Override the app URL with `SUNSPOT_URL=http://localhost:4174`. Tests create and cancel their own local invitations.
@@ -46,7 +47,7 @@ For browser tests, install Chromium with `npx playwright install chromium`, or s
 
 Use `npm run build && npm start` on a Node server with writable **persistent storage**. `SUNSPOT_DATA_DIR` can select an absolute path on that disk. Set `SUNSPOT_PUBLIC_ORIGIN` to the public origin when running behind a reverse proxy so mutation-origin checks use the correct host and scheme. The local SQLite pilot targets one server and has a shared API request budget of 100 requests/minute per process.
 
-**Invitations are not ready for Vercel deployment.** The Vercel runtime explicitly returns a useful 503 response for invitation APIs rather than storing them in a temporary filesystem. Map, solar analysis, demo events and forecasts do not require invitation storage. A shared database and distributed rate limiter are the next deployment work; no hosting or paid resources are provisioned by this integration.
+**Invitations are not ready for Vercel deployment.** The Vercel runtime explicitly returns a useful 503 response for invitation APIs rather than storing them in a temporary filesystem. Map, solar analysis, events and forecasts do not require invitation storage. A shared database and distributed rate limiter are the next deployment work; no hosting or paid resources are provisioned by this integration.
 
 ## Accuracy and sources
 
@@ -54,6 +55,7 @@ Building heights are often estimated, and trees, terrain and detailed roof shape
 
 - [OpenStreetMap contributors](https://www.openstreetmap.org/copyright): buildings, parks, places and benches, under ODbL. [Data provenance](data/README.md).
 - [MET Norway Locationforecast](https://api.met.no/weatherapi/locationforecast/2.0/documentation): forecasts in the main map.
+- [Københavns Biblioteker](https://bibliotek.kk.dk/api/v1/events): live public event feed; [event sources and limitations](docs/15-eventkallor.md).
 - [Open-Meteo](https://open-meteo.com/): weather in the original `/lab` prototype.
 
 [Integration notes](docs/14-nextjs-integration.md) describe the migration and remaining work. Product and prototype documentation under `docs/01`–`docs/13` came from the earlier app; their Vite/Express references describe that version. The original Next.js plans remain under `docs/superpowers/`.

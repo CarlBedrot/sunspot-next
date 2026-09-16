@@ -39,6 +39,12 @@ const choose = async (name) => {
     .click();
 };
 try {
+  await page.route("**/api/events?**", (route) =>
+    route.fulfill({ json: { events: [], available: true, stale: false } }),
+  );
+  await page.addInitScript(() =>
+    localStorage.setItem("sunspot:demo-events", "true"),
+  );
   await page.clock.setSystemTime(new Date("2026-09-16T12:00:00Z"));
   await page.addInitScript(() => {
     window.testNotifications = [];

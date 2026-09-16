@@ -47,6 +47,9 @@ export function createDemoEvents(dates) {
     id: `demo-${key}-${date}`,
     category: "event",
     demo: true,
+    organizer: "SunSpot · demo",
+    venue: key === "picnic" ? "Kongens Have" : "Köpenhamn",
+    tags: ["Demo"],
     startsAt: atHour(date, start).toISOString(),
     endsAt: atHour(date, end).toISOString(),
     description:

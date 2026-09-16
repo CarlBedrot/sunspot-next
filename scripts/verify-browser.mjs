@@ -16,6 +16,12 @@ const ready = () =>
 const slider = () => page.getByRole("slider", { name: "Dag och tid" });
 let gatheringId;
 try {
+  await page.route("**/api/events?**", (route) =>
+    route.fulfill({ json: { events: [], available: true, stale: false } }),
+  );
+  await page.addInitScript(() =>
+    localStorage.setItem("sunspot:demo-events", "true"),
+  );
   await page.clock.setSystemTime(new Date("2026-09-21T12:00:00Z"));
   await page.goto(base, { waitUntil: "domcontentloaded" });
   await ready();
@@ -78,8 +84,8 @@ try {
   await page
     .getByRole("button", { name: "Visa Måndagshäng · demo", exact: true })
     .click();
-  await expect(page.getByRole("article", { name: "Valt event" })).toContainText(
-    "Inget verkligt evenemang",
+  await expect(page.getByRole("dialog", { name: "Valt event" })).toContainText(
+    "inget verkligt evenemang",
   );
   await page.screenshot({ path: "artifacts/event-desktop.png" });
   await slider().fill("1020");

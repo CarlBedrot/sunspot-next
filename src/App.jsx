@@ -1,3 +1,4 @@
+import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -24,11 +25,10 @@ import {
   X,
 } from "lucide-react";
 import MapView from "./MapView.jsx";
+import EventDetails from "./EventDetails.jsx";
 import Invite from "./Invite.jsx";
 import * as SunCalc from "suncalc";
-import { sv } from "date-fns/locale";
 import { createDemoEvents, eventsAt } from "./events.js";
-import { formatInTimeZone } from "date-fns-tz";
 import { distanceMeters } from "./exposure.js";
 import { useSolarModel } from "./useSolarModel.js";
 import SolarWatch, { solarLabel } from "./SolarWatch.jsx";
@@ -227,9 +227,23 @@ function CreateForm({ place, date, hour, duration, onClose }) {
 
 export default function App() {
   const [days] = useState(dayOptions);
-  const [events] = useState(() =>
+  const [demoEvents] = useState(() =>
     createDemoEvents(days.map((day) => day.value)),
   );
+  const [showDemoEvents, setShowDemoEvents] = useState(() =>
+    saved("demo-events", false),
+  );
+  const [eventFeed, setEventFeed] = useState({
+    events: [],
+    loading: true,
+    message: null,
+  });
+  const events = [...eventFeed.events, ...(showDemoEvents ? demoEvents : [])];
+  const eventFrom = atHour(days[0].value, 0).toISOString();
+  const eventTo = atHour(
+    localDate(new Date(atHour(days.at(-1).value, 12).getTime() + 86400_000)),
+    0,
+  ).toISOString();
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [watchOpen, setWatchOpen] = useState(false);
@@ -258,6 +272,33 @@ export default function App() {
       });
     return () => controller.abort();
   }, [inviteId]);
+  useEffect(() => {
+    if (inviteId) return;
+    const controller = new AbortController();
+    const loadEvents = () =>
+      api(
+        `/events?from=${encodeURIComponent(eventFrom)}&to=${encodeURIComponent(eventTo)}`,
+        { signal: controller.signal },
+      )
+        .then((data) => {
+          if (!controller.signal.aborted)
+            setEventFeed({ ...data, loading: false });
+        })
+        .catch((error) => {
+          if (error.name !== "AbortError")
+            setEventFeed({
+              events: [],
+              loading: false,
+              message: "Event kunde inte hämtas. Försök igen om en stund.",
+            });
+        });
+    loadEvents();
+    const timer = setInterval(loadEvents, 15 * 60_000);
+    return () => {
+      controller.abort();
+      clearInterval(timer);
+    };
+  }, [inviteId, eventFrom, eventTo]);
   const [onlySun, setOnlySun] = useState(true),
     [onlyOpen, setOnlyOpen] = useState(false);
   const [seatError, setSeatError] = useState("");
@@ -318,11 +359,14 @@ export default function App() {
   const instant = atHour(date, hour).toISOString();
   const solar = useSolarModel(instant, overrides, duration, !inviteId);
   const results = solar.results;
+  const matchingEvents = events.filter((event) =>
+    normalizeSearch(
+      [event.name, event.venue, ...(event.tags || [])].join(" "),
+    ).includes(normalizeSearch(query)),
+  );
   const visibleEvents =
     category === "all" || category === "event"
-      ? eventsAt(events, instant).filter((event) =>
-          normalizeSearch(event.name).includes(normalizeSearch(query)),
-        )
+      ? eventsAt(matchingEvents, instant)
       : [];
   const activeEvent = visibleEvents.find(
     (event) => event.id === selectedEventId,
@@ -375,14 +419,17 @@ export default function App() {
     },
     [selected],
   );
-  const selectPlace = useCallback((place) => {
-    setSelected(place);
-    setDetailOpen(true);
-    setSelectedEventId(null);
-    setModal(null);
-    setWatchOpen(false);
-    setEditing(false);
-  }, []);
+  const selectPlace = useCallback(
+    (place) => {
+      setSelected(place);
+      setDetailOpen(true);
+      setSelectedEventId(null);
+      setModal(null);
+      setWatchOpen(false);
+      setEditing(false);
+    },
+    [setModal],
+  );
   const selectMarker = useCallback(
     (item) => {
       if (item.category === "event") {
@@ -392,8 +439,20 @@ export default function App() {
         setModal(null);
       } else selectPlace(item);
     },
-    [selectPlace],
+    [selectPlace, setModal],
   );
+  const closeEvent = useCallback(() => setSelectedEventId(null), []);
+  function jumpToEvent(event) {
+    const chosen = new Date(
+      Math.max(Date.parse(event.startsAt), Date.parse(eventFrom)),
+    );
+    setDate(localDate(chosen));
+    const [h, m] = clock(chosen).split(":").map(Number);
+    setHour(h + m / 60);
+    setLive(false);
+    setCategory("event");
+    selectMarker(event);
+  }
   function clearFilters() {
     setCategory("all");
     setDetailOpen(false);
@@ -618,39 +677,6 @@ export default function App() {
                   </button>
                 </article>
               )}
-              {activeEvent && (
-                <article
-                  className="detail-card event-card"
-                  aria-label="Valt event"
-                >
-                  <button
-                    className="detail-close icon-button"
-                    aria-label="Stäng event"
-                    onClick={() => setSelectedEventId(null)}
-                  >
-                    <X size={18} />
-                  </button>
-                  <span className="event-badge">DEMO-EVENT</span>
-                  <h2>
-                    {activeEvent.name} <span>{activeEvent.emoji}</span>
-                  </h2>
-                  <p className="event-time">
-                    <CalendarDays size={15} />{" "}
-                    {formatInTimeZone(
-                      new Date(activeEvent.startsAt),
-                      "Europe/Copenhagen",
-                      "EEEE d/M",
-                      { locale: sv },
-                    )}{" "}
-                    · {clock(new Date(activeEvent.startsAt))}–
-                    {clock(new Date(activeEvent.endsAt))}
-                  </p>
-                  <p>{activeEvent.description}</p>
-                  <small>
-                    Exempel för att prova tidslinjen. Inget verkligt evenemang.
-                  </small>
-                </article>
-              )}
               {watchId && (
                 <button
                   className="watch-peek"
@@ -660,6 +686,16 @@ export default function App() {
                 </button>
               )}
             </MapView>
+            {activeEvent && (
+              <EventDetails
+                key={activeEvent.id}
+                event={activeEvent}
+                weather={weather}
+                stale={eventFeed.stale}
+                onClose={closeEvent}
+              />
+            )}
+
             <section className="time-dock controls" aria-label="Dag och tid">
               <div className="days">
                 {days.map((d) => (
@@ -718,16 +754,28 @@ export default function App() {
                 <span>{days.at(-1).day} 23:55</span>
               </div>
               <div className="timeline-status">
-                <span>
+                <button
+                  aria-label="Visa veckans event"
+                  onClick={() => {
+                    setCategory("event");
+                    setModal("list");
+                  }}
+                >
                   {category === "all" || category === "event" ? (
                     <>
-                      {visibleEvents.length} event nu{" "}
-                      <span className="demo-label">demo</span>
+                      {eventFeed.loading
+                        ? "Hämtar event…"
+                        : eventFeed.message
+                          ? "Eventkälla saknas / äldre data"
+                          : `${visibleEvents.length} event nu · se veckan`}{" "}
+                      {showDemoEvents && (
+                        <span className="demo-label">inkl. demo</span>
+                      )}
                     </>
                   ) : (
                     `${filtered.length} platser`
                   )}
-                </span>
+                </button>
                 <button
                   onClick={() => setModal("weather")}
                   aria-label="Visa väderprognos"
@@ -781,6 +829,17 @@ export default function App() {
                     />
                     Bara bekräftat öppet enligt OSM
                   </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={showDemoEvents}
+                      onChange={(e) => {
+                        setShowDemoEvents(e.target.checked);
+                        save("demo-events", e.target.checked);
+                      }}
+                    />
+                    Visa demo-event
+                  </label>
                   <button
                     className="text-button"
                     aria-pressed={live}
@@ -832,7 +891,9 @@ export default function App() {
           )}
           {modal === "list" && (
             <Modal
-              title={category === "event" ? "Event just nu" : "Platser just nu"}
+              title={
+                category === "event" ? "Event denna vecka" : "Platser just nu"
+              }
               onClose={() => setModal(null)}
             >
               {category !== "event" && (
@@ -884,28 +945,52 @@ export default function App() {
                   </p>
                 </section>
               )}
-              <div className="event-list">
-                {visibleEvents.map((event) => (
-                  <button
-                    key={event.id}
-                    className="event-list-item"
-                    onClick={() => selectMarker(event)}
-                  >
-                    <span>{event.emoji}</span>
-                    <strong>{event.name}</strong>
-                    <small>
-                      {clock(new Date(event.startsAt))}–
-                      {clock(new Date(event.endsAt))} · demo
-                    </small>
-                  </button>
-                ))}
-              </div>
-              {category === "event" && !visibleEvents.length && (
-                <p className="fineprint">
-                  Inga event vid den här tiden. Prova måndag 15:00 eller imorgon
-                  16:00.
-                </p>
+              {(category === "all" || category === "event") && (
+                <>
+                  <div className="event-list-heading">
+                    <h3>Event denna vecka</h3>
+                    <span>{matchingEvents.length}</span>
+                  </div>
+                  {eventFeed.loading && (
+                    <p role="status">Hämtar event från Köpenhamn…</p>
+                  )}
+                  {eventFeed.message && (
+                    <p className="fineprint" role="status">
+                      {eventFeed.message}
+                    </p>
+                  )}
+                  <div className="event-list">
+                    {matchingEvents
+                      .sort(
+                        (a, b) =>
+                          Date.parse(a.startsAt) - Date.parse(b.startsAt),
+                      )
+                      .map((event) => (
+                        <button
+                          key={event.id}
+                          className="event-list-item"
+                          onClick={() => jumpToEvent(event)}
+                        >
+                          <span>{event.emoji}</span>
+                          <strong>{event.name}</strong>
+                          <small>
+                            {clock(new Date(event.startsAt))}–
+                            {clock(new Date(event.endsAt))} ·{" "}
+                            {localDate(new Date(event.startsAt))}
+                            {event.demo ? " · demo" : ""}
+                          </small>
+                        </button>
+                      ))}
+                  </div>
+                </>
               )}
+              {category === "event" &&
+                !matchingEvents.length &&
+                !eventFeed.loading && (
+                  <p className="fineprint">
+                    Inga event hittades för den här veckan och sökningen.
+                  </p>
+                )}
             </Modal>
           )}
           {modal === "weather" && (

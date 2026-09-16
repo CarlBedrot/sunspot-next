@@ -24,9 +24,9 @@ The original Next map is kept at `/lab`, with scoped map styles. Original bench 
 
 ## Scope and remaining work
 
-The main map includes categories, complete filter reset, Touchgrass, time-bound demo events, forecasts, invitation/RSVP flows, seating-point editing and solar warnings. Data attribution and the supplied palette are retained.
+The main map includes categories, complete filter reset, Touchgrass, time-bound real and optional demo events, forecasts, invitation/RSVP flows, seating-point editing and solar warnings. Data attribution and the supplied palette are retained.
 
-Before deployment with invitations on Vercel: replace SQLite with shared durable storage, carry over schema/authorization semantics, and use a distributed request limiter. No database provisioning, production deployment or merge is part of this branch. Demo events still need a real source. Google Places, background push, accounts and real booking remain outside the prototype.
+Before deployment with invitations on Vercel: replace SQLite with shared durable storage, carry over schema/authorization semantics, and use a distributed request limiter. No database provisioning, production deployment or merge is part of this branch. The separate `/api/events` route now reads the public library feed and curated examples; see [event integration](15-eventkallor.md). Google Places, background push, accounts and real booking remain outside the prototype.
 
 ## Verification
 
@@ -34,4 +34,4 @@ The combined automated suite covers the original Next geometry/weather functions
 
 Browser tests exercise the Next routes on desktop and mobile, the weekly timeline, events appearing/disappearing, filters, direct invitation links, guest answer persistence, cancellation, data retry, seating edits and notification deduplication. Production-bundle verification is separate from development to check the worker and server APIs after bundling.
 
-Verified locally on Node 24.19.0: all 39 tests pass (18 original Vitest cases and 21 imported/migration cases), lint passes, and Next.js production build completes without warnings. Both browser suites pass against development and production servers. Desktop/mobile screenshots were inspected. Browser readiness waits for the document and completed solar analysis, rather than every external resource's load event.
+Verified locally on Node 24.19.0: all 43 tests pass (18 original Vitest cases and 25 imported/migration/source cases), lint passes, and Next.js production build completes without warnings. Both browser suites pass against development and production servers. Desktop/mobile screenshots were inspected. Browser readiness waits for the document and completed solar analysis, rather than every external resource's load event.
