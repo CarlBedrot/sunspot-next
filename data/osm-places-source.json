@@ -1,0 +1,151 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-09-16T16:36:21Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+    {
+      "type": "node",
+      "id": 1448422015,
+      "lat": 55.6832824,
+      "lon": 12.5661022,
+      "tags": {
+        "amenity": "restaurant",
+        "check_date": "2026-08-20",
+        "check_date:diet:vegetarian": "2021-05-17",
+        "cuisine": "regional",
+        "diet:vegetarian": "yes",
+        "fvst:navnelbnr": "516922",
+        "indoor_seating": "yes",
+        "name": "Høst",
+        "opening_hours": "17:30-24:00 \"last order 21:30\"",
+        "operator": "Cofoco",
+        "outdoor_seating": "no",
+        "phone": "+45 89938409",
+        "ref:DK:cvr": "34709254",
+        "ref:DK:cvr:pnummer": "1017951862",
+        "toilets:wheelchair": "no",
+        "website": "https://cofoco.dk/en/restaurants/hoest/",
+        "wheelchair": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4012815277,
+      "lat": 55.675205,
+      "lon": 12.586764,
+      "tags": {
+        "amenity": "bar",
+        "check_date": "2025-04-14",
+        "check_date:smoking": "2025-04-14",
+        "fvst:name": "Kayak Bar Kajen Drift ApS",
+        "fvst:navnelbnr": "734284",
+        "indoor_seating": "yes",
+        "name": "Kayak Bar",
+        "opening_hours": "Jun-Aug",
+        "outdoor_seating": "yes",
+        "phone": "+45 3049 0013",
+        "ref:DK:cvr": "39120992",
+        "ref:DK:cvr:pnummer": "1023073826",
+        "smoking": "outside",
+        "website": "https://kayakbar.dk/",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4430760869,
+      "lat": 55.6892932,
+      "lon": 12.6109061,
+      "tags": {
+        "amenity": "cafe",
+        "check_date": "2026-04-18",
+        "check_date:opening_hours": "2026-04-18",
+        "contact:facebook": "labanchinacph",
+        "contact:instagram": "labanchinacph",
+        "cuisine": "chinese;italian",
+        "fvst:navnelbnr": "698388",
+        "indoor_seating": "yes",
+        "name": "La Banchina",
+        "opening_hours": "Su-We 08:00-18:00; Th-Sa 08:00-20:00",
+        "outdoor_seating": "yes",
+        "phone": "+45 31 26 65 61",
+        "ref:DK:cvr": "37994987",
+        "ref:DK:cvr:pnummer": "1021735589",
+        "website": "https://www.labanchina.dk/"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12798373371,
+      "lat": 55.6918656,
+      "lon": 12.5557824,
+      "tags": {
+        "alt_name": "Brus Eatery",
+        "amenity": "restaurant",
+        "cuisine": "burger",
+        "fvst:navnelbnr": "1457727",
+        "name": "BRUS",
+        "ref:DK:cvr": "37222852",
+        "ref:DK:cvr:pnummer": "1021313749",
+        "website": "https://tapperietbrus.dk/eatery/"
+      }
+    },
+    {
+      "type": "way",
+      "id": 3098756,
+      "center": {
+        "lat": 55.6811139,
+        "lon": 12.5665612
+      },
+      "tags": {
+        "leisure": "park",
+        "name": "Ørstedsparken",
+        "name:etymology": "H.C. Ørsted og Anders Sandøe Ørsted",
+        "name:etymology:wikidata": "Q44412;Q491280",
+        "wikidata": "Q2686981",
+        "wikipedia": "da:Ørstedsparken"
+      }
+    },
+    {
+      "type": "way",
+      "id": 118353598,
+      "center": {
+        "lat": 55.6850892,
+        "lon": 12.5798631
+      },
+      "tags": {
+        "fee": "no",
+        "leisure": "park",
+        "name": "Kongens Have",
+        "name:da": "Kongens Have",
+        "name:de": "Königsgarten",
+        "name:en": "King's Garden",
+        "name:etymology:wikidata": "Q153586",
+        "name:ko": "왕의 정원",
+        "name:zh": "羅森堡花園",
+        "opening_hours": "07:00-17:00; Mar 07:00-19:00; Apr 07:00-21:00; May-Aug 07:00-22:00; Sep 07:00-21:00; Oct 07:00-19:00",
+        "website": "https://www.parkmuseerne.dk/parker/kongens-have",
+        "wikidata": "Q1898947",
+        "wikipedia": "da:Kongens Have"
+      }
+    },
+    {
+      "type": "way",
+      "id": 529519844,
+      "center": {
+        "lat": 55.6816637,
+        "lon": 12.595727
+      },
+      "tags": {
+        "name": "Ofelia Plads",
+        "name:etymology:wikidata": "Q1800888",
+        "place": "square",
+        "wikidata": "Q12329915",
+        "wikipedia": "da:Ofelia Plads"
+      }
+    }
+  ]
+}

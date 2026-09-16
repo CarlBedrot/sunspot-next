@@ -1,0 +1,1580 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-09-16T17:27:04Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+    {
+      "type": "node",
+      "id": 24958713,
+      "lat": 55.6892753,
+      "lon": 12.5578754,
+      "tags": {
+        "amenity": "pub",
+        "check_date": "2023-05-14",
+        "description": "Craft beer bar",
+        "fvst:name": "Cerevisia",
+        "fvst:navnelbnr": "111614",
+        "indoor_seating": "yes",
+        "name": "Ølbaren",
+        "opening_hours": "Mo-We 16:00-00:00; Fr 15:00-02:00; Sa 15:00-02:00; Su 16:00-21:00; Th 16:00-01:00",
+        "outdoor_seating": "yes",
+        "phone": "+45 35354534",
+        "ref:DK:cvr": "26748097",
+        "smoking": "no",
+        "website": "https://oelbaren.dk/"
+      }
+    },
+    {
+      "type": "node",
+      "id": 24971137,
+      "lat": 55.690348,
+      "lon": 12.5640201,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "fvst:navnelbnr": "1483591",
+        "indoor_seating": "yes",
+        "microbrewery": "yes",
+        "name": "Juma",
+        "old_name": "Nørrebro Bryghus Restaurant",
+        "operator": "Madklubben",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "33083351",
+        "ref:DK:cvr:pnummer": "1031033620",
+        "reservation": "+45 50488434",
+        "website": "https://restaurantjuma.dk/",
+        "wheelchair": "yes",
+        "wheelchair:description": "Adgang via elevator gennem port. Ingen armstøtte ved toilet"
+      }
+    },
+    {
+      "type": "node",
+      "id": 335962972,
+      "lat": 55.6953457,
+      "lon": 12.543356,
+      "tags": {
+        "amenity": "pub",
+        "fvst:navnelbnr": "720885",
+        "indoor_seating": "yes",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name": "Café Stefanshus",
+        "opening_hours": "Mo-We 08:00-01:00,Th-Sa 08:00-01:00,Su 11:00-23:00",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "35240586",
+        "ref:DK:cvr:pnummer": "1018480081",
+        "website": "http://www.acedesign.dk/stefanshus/",
+        "wheelchair": "limited"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1118919064,
+      "lat": 55.6942552,
+      "lon": 12.5482944,
+      "tags": {
+        "amenity": "pub",
+        "check_date": "2025-05-01",
+        "fvst:navnelbnr": "117859",
+        "indoor_seating": "yes",
+        "name": "Cafe Runddelen",
+        "opening_hours": "Mo-Su 12:00-05:00",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "28533640",
+        "ref:DK:cvr:pnummer": "1015905146",
+        "wheelchair": "limited"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1775489880,
+      "lat": 55.6889266,
+      "lon": 12.562565,
+      "tags": {
+        "amenity": "restaurant",
+        "branch": "Nørrebro",
+        "cuisine": "japanese",
+        "fvst:navnelbnr": "562391",
+        "indoor_seating": "yes",
+        "name": "Kung Fu II Izakaya Bar",
+        "opening_hours": "Mo-Sa 17:30+",
+        "outdoor_seating": "yes",
+        "phone": "+45 40636976",
+        "ref:DK:cvr": "36412909",
+        "ref:DK:cvr:pnummer": "1019826895",
+        "source": "survey",
+        "website": "https://kungfubar.dk/noerrebro/frontpage/",
+        "wheelchair": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1830057767,
+      "lat": 55.6895902,
+      "lon": 12.5582863,
+      "tags": {
+        "amenity": "restaurant",
+        "brand": "Bindia",
+        "cuisine": "indian",
+        "delivery": "yes",
+        "diet:halal": "yes",
+        "diet:meat": "yes",
+        "diet:non-vegetarian": "yes",
+        "diet:organic": "yes",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "email": "office@bindia.dk",
+        "fvst:navnelbnr": "1518550",
+        "name": "Bindia Elmegade",
+        "name:en": "Bindia Indian Food Take Away Nørrebro",
+        "opening_hours": "Mo-Su 16:00-21:00",
+        "outdoor_seating": "yes",
+        "phone": "+4535378737",
+        "ref:DK:cvr": "38518607",
+        "ref:DK:cvr:pnummer": "1031940571",
+        "takeaway": "yes",
+        "website": "https://www.bindia.dk/",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2229062918,
+      "lat": 55.6946446,
+      "lon": 12.5432229,
+      "tags": {
+        "amenity": "bar",
+        "contact:instagram": "mikkellerbeer",
+        "food": "yes",
+        "fvst:name": "Stefansgade Bar",
+        "fvst:navnelbnr": "1455094",
+        "indoor_seating": "yes",
+        "internet_access:fee": "no",
+        "internet_access:ssid": "Mikkeller_Friends",
+        "name": "Mikkeller & Friends",
+        "opening_hours": "Mo-We 15:00-22:00; Th 14:00-23:00; Fr 14:00-01:00; Sa 12:00-01:00; Su 12:00-22:00",
+        "outdoor_seating": "yes",
+        "phone": "+4533227997",
+        "ref:DK:cvr": "32297757",
+        "ref:DK:cvr:pnummer": "1030677672",
+        "website": "https://www.mikkeller.com/locations/mikkeller-and-friends",
+        "wheelchair": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 3656367927,
+      "lat": 55.701174,
+      "lon": 12.551194,
+      "tags": {
+        "amenity": "bar",
+        "fvst:navnelbnr": "715239",
+        "name": "Klør Dame",
+        "opening_hours": "Mo-Su 09:00-24:00",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "30623126",
+        "ref:DK:cvr:pnummer": "1018356356",
+        "smoking": "yes",
+        "wheelchair": "limited"
+      }
+    },
+    {
+      "type": "node",
+      "id": 3659148934,
+      "lat": 55.692219,
+      "lon": 12.555909,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "italian;organic",
+        "fvst:name": "Bæst & Mirabelle Guldbergsgade",
+        "fvst:navnelbnr": "549285",
+        "internet_access": "wlan",
+        "name": "Bæst",
+        "opening_hours": "Tu-Su 17:00-22:30",
+        "outdoor_seating": "yes",
+        "phone": "+45 35350463",
+        "ref:DK:cvr": "36062193",
+        "ref:DK:cvr:pnummer": "1019763508",
+        "takeaway": "no",
+        "website": "https://baest.dk/",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5786719592,
+      "lat": 55.6877393,
+      "lon": 12.5595897,
+      "tags": {
+        "alt_name": "Escobar Copenhagen",
+        "amenity": "bar",
+        "brand": "København",
+        "check_date": "2026-03-02",
+        "contact:facebook": "https://facebook.com/EscobarCph",
+        "fvst:navnelbnr": "524351",
+        "internet_access": "wlan",
+        "level": "-1",
+        "name": "Escobar",
+        "opening_hours": "Mo-Th 16:00-02:00; Fr-Sa 16:00-04:00; Su 16:00-02:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "ref:DK:cvr": "31271274",
+        "smoking": "outside",
+        "website": "https://escobarcph.dk"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5873205715,
+      "lat": 55.696125,
+      "lon": 12.5432144,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "diet:meat": "yes",
+        "diet:vegetarian": "yes",
+        "fvst:navnelbnr": "1481937",
+        "indoor_seating": "yes",
+        "name": "Manifesto Pizza",
+        "opening_hours": "Tu-Th 16:00-22:00; Fr 16:00-24:00; Sa 12:00-24:00; Su 12:00-22:00",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "45289079",
+        "ref:DK:cvr:pnummer": "1030934314",
+        "website": "https://mf-pizza.dk"
+      }
+    },
+    {
+      "type": "node",
+      "id": 6029934580,
+      "lat": 55.690773,
+      "lon": 12.5445454,
+      "tags": {
+        "amenity": "bar",
+        "cuisine": "pub",
+        "email": "skovbaren@gmail.com",
+        "fvst:navnelbnr": "758303",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "internet_access:ssid": "Skovbar",
+        "name": "Skovbar",
+        "opening_hours": "Tu-Th 16:00-24:00, Fr-Sa 15:00-24:00",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "39704420",
+        "ref:DK:cvr:pnummer": "1023772201",
+        "smoking": "outside"
+      }
+    },
+    {
+      "type": "node",
+      "id": 6700526583,
+      "lat": 55.6900527,
+      "lon": 12.5550218,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "seafood",
+        "diet:vegetarian": "yes",
+        "fvst:navnelbnr": "806508",
+        "indoor_seating": "yes",
+        "name": "Hooked",
+        "opening_hours": "12:00-21:00",
+        "outdoor_seating": "yes",
+        "phone": "+45 30705922",
+        "ref:DK:cvr": "37306568",
+        "ref:DK:cvr:pnummer": "1024755467",
+        "website": "https://gethooked.dk/"
+      }
+    },
+    {
+      "type": "node",
+      "id": 7098162233,
+      "lat": 55.688681,
+      "lon": 12.5440284,
+      "tags": {
+        "amenity": "pub",
+        "brewery": "yes",
+        "description": "Bodega",
+        "fvst:fixme": "fvst:no_pos",
+        "fvst:navnelbnr": "1411822",
+        "min_age": "18",
+        "name": "Klovnens Bodega",
+        "opening_hours": "Mo-Sa 10:00-01:00, Su 10:00-22:00",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "35042350",
+        "ref:DK:cvr:pnummer": "1018271555",
+        "wheelchair": "limited"
+      }
+    },
+    {
+      "type": "node",
+      "id": 7179414878,
+      "lat": 55.6846843,
+      "lon": 12.553353,
+      "tags": {
+        "air_conditioning": "yes",
+        "all_you_can_eat": "yes",
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "delivery": "yes",
+        "diet:vegetarian": "yes",
+        "email": "infoccsushi@gmail.com",
+        "fvst:name": "Kami sushi",
+        "fvst:navnelbnr": "1010189",
+        "indoor_seating": "yes",
+        "name": "CC Restaurant",
+        "opening_hours": "Mo-Th 14:00-23:00; Fr-Su 13:00-23:00",
+        "outdoor_seating": "yes",
+        "phone": "+45 53 33 33 71",
+        "ref:DK:cvr": "35225013",
+        "ref:DK:cvr:pnummer": "1027310881",
+        "reservation": "yes",
+        "takeaway": "yes",
+        "website": "http://ccrestaurant.dk",
+        "wheelchair": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8582838546,
+      "lat": 55.6932511,
+      "lon": 12.5434247,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "seafood",
+        "fvst:navnelbnr": "118804",
+        "name": "Silberbauers Bistro",
+        "outdoor_seating": "yes",
+        "phone": "+45 36966593",
+        "ref:DK:cvr": "32669182",
+        "ref:DK:cvr:pnummer": "1017600199",
+        "smoking": "no",
+        "smoking:outside": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8706595479,
+      "lat": 55.6895249,
+      "lon": 12.558191,
+      "tags": {
+        "amenity": "bar",
+        "facebook": "Vivant CPH",
+        "fvst:navnelbnr": "985777",
+        "indoor_seating": "yes",
+        "instagram": "vivant_cph",
+        "name": "Bar Vivant",
+        "opening_hours": "Tu-Th 12:00-23:00; Fr, Sa 12:00-24:00",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "42143065",
+        "ref:DK:cvr:pnummer": "1026948629",
+        "shop": "wine",
+        "website": "https://vivant.dk"
+      }
+    },
+    {
+      "type": "node",
+      "id": 9760524892,
+      "lat": 55.6887496,
+      "lon": 12.5624009,
+      "tags": {
+        "amenity": "pub",
+        "check_date": "2023-05-14",
+        "cocktails": "yes",
+        "cuisine": "burger",
+        "diet:vegan": "no",
+        "diet:vegetarian": "yes",
+        "drink:beer": "yes",
+        "food": "yes",
+        "fvst:navnelbnr": "1228843",
+        "indoor_seating": "yes",
+        "microbrewery": "yes",
+        "name": "Too Old To Die Young",
+        "opening_hours": "12:00-24:00, Fr,Sa 12:00-02:00",
+        "outdoor_seating": "yes",
+        "phone": "+45 31737353",
+        "ref:DK:cvr": "37987395",
+        "ref:DK:cvr:pnummer": "1021725982",
+        "website": "https://toooldtodieyoung.dk/ravnsborggade/",
+        "wheelchair": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 12897927507,
+      "lat": 55.6878032,
+      "lon": 12.5596601,
+      "tags": {
+        "amenity": "bar",
+        "brand": "København",
+        "check_date": "2025-06-08",
+        "fvst:navnelbnr": "524351",
+        "level": "-1",
+        "name": "Under Træet",
+        "outdoor_seating": "yes",
+        "ref:DK:cvr": "31271274",
+        "smoking": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 3098756,
+      "bounds": {
+        "minlat": 55.6793085,
+        "minlon": 12.5640631,
+        "maxlat": 55.6829194,
+        "maxlon": 12.5690593
+      },
+      "nodes": [
+        290438737,
+        1416152302,
+        10207065675,
+        1416152312,
+        3772200978,
+        3772200977,
+        10207065674,
+        3772200975,
+        3772200968,
+        10207065671,
+        3772200961,
+        1596926686,
+        582811488,
+        1596926698,
+        9862262248,
+        9862262238,
+        3772223169,
+        9862883530,
+        4181943982,
+        9849005420,
+        9849005437,
+        9849005444,
+        9849005441,
+        9849005452,
+        518428873,
+        5440443233,
+        9848971816,
+        9849005439,
+        9849005456,
+        5440443236,
+        9849005457,
+        9849005438,
+        9848971814,
+        9849005422,
+        9848971799,
+        9849005443,
+        9849005419,
+        9848971815,
+        9848971804,
+        9849005442,
+        9849005450,
+        295351487,
+        9862883527,
+        9848971809,
+        9849005421,
+        9848971802,
+        9848971800,
+        9849005458,
+        9849005454,
+        9849005445,
+        9849005440,
+        10594201160,
+        1794362538,
+        1596926680,
+        3772198033,
+        1416152402,
+        10207065672,
+        3772199157,
+        10207065673,
+        3772197568,
+        3772222649,
+        3772197558,
+        3772197554,
+        1416152321,
+        1416152318,
+        290438737
+      ],
+      "geometry": [
+        {
+          "lat": 55.6796537,
+          "lon": 12.5647605
+        },
+        {
+          "lat": 55.6793085,
+          "lon": 12.5656692
+        },
+        {
+          "lat": 55.6793214,
+          "lon": 12.5657858
+        },
+        {
+          "lat": 55.6793342,
+          "lon": 12.5659012
+        },
+        {
+          "lat": 55.6798878,
+          "lon": 12.5666226
+        },
+        {
+          "lat": 55.6799781,
+          "lon": 12.5667359
+        },
+        {
+          "lat": 55.6803,
+          "lon": 12.5671537
+        },
+        {
+          "lat": 55.6806301,
+          "lon": 12.5675759
+        },
+        {
+          "lat": 55.6807107,
+          "lon": 12.5676813
+        },
+        {
+          "lat": 55.6811313,
+          "lon": 12.5682259
+        },
+        {
+          "lat": 55.6816733,
+          "lon": 12.568919
+        },
+        {
+          "lat": 55.6817872,
+          "lon": 12.5690593
+        },
+        {
+          "lat": 55.6818643,
+          "lon": 12.5690346
+        },
+        {
+          "lat": 55.6819337,
+          "lon": 12.5690135
+        },
+        {
+          "lat": 55.6821592,
+          "lon": 12.5684399
+        },
+        {
+          "lat": 55.6821949,
+          "lon": 12.568349
+        },
+        {
+          "lat": 55.6821632,
+          "lon": 12.5683133
+        },
+        {
+          "lat": 55.6821961,
+          "lon": 12.568225
+        },
+        {
+          "lat": 55.6822114,
+          "lon": 12.5681838
+        },
+        {
+          "lat": 55.6822368,
+          "lon": 12.5682003
+        },
+        {
+          "lat": 55.6822651,
+          "lon": 12.5681961
+        },
+        {
+          "lat": 55.6822963,
+          "lon": 12.5681647
+        },
+        {
+          "lat": 55.682311,
+          "lon": 12.5681006
+        },
+        {
+          "lat": 55.6823062,
+          "lon": 12.5680372
+        },
+        {
+          "lat": 55.6822874,
+          "lon": 12.5679975
+        },
+        {
+          "lat": 55.6824293,
+          "lon": 12.5676314
+        },
+        {
+          "lat": 55.6824442,
+          "lon": 12.5676482
+        },
+        {
+          "lat": 55.6824606,
+          "lon": 12.5676612
+        },
+        {
+          "lat": 55.682478,
+          "lon": 12.5676658
+        },
+        {
+          "lat": 55.6824954,
+          "lon": 12.5676644
+        },
+        {
+          "lat": 55.6825123,
+          "lon": 12.5676521
+        },
+        {
+          "lat": 55.6825288,
+          "lon": 12.5676241
+        },
+        {
+          "lat": 55.6825404,
+          "lon": 12.5675849
+        },
+        {
+          "lat": 55.6825428,
+          "lon": 12.5675399
+        },
+        {
+          "lat": 55.6825369,
+          "lon": 12.5675057
+        },
+        {
+          "lat": 55.6825568,
+          "lon": 12.5674965
+        },
+        {
+          "lat": 55.6825698,
+          "lon": 12.5674756
+        },
+        {
+          "lat": 55.682578,
+          "lon": 12.5674449
+        },
+        {
+          "lat": 55.6825778,
+          "lon": 12.5674111
+        },
+        {
+          "lat": 55.68257,
+          "lon": 12.5673843
+        },
+        {
+          "lat": 55.6825608,
+          "lon": 12.5673637
+        },
+        {
+          "lat": 55.6825414,
+          "lon": 12.5673501
+        },
+        {
+          "lat": 55.6825489,
+          "lon": 12.5673341
+        },
+        {
+          "lat": 55.6825616,
+          "lon": 12.5673069
+        },
+        {
+          "lat": 55.6825877,
+          "lon": 12.5673159
+        },
+        {
+          "lat": 55.682611,
+          "lon": 12.5673005
+        },
+        {
+          "lat": 55.6826287,
+          "lon": 12.5672597
+        },
+        {
+          "lat": 55.6826309,
+          "lon": 12.5672154
+        },
+        {
+          "lat": 55.6826232,
+          "lon": 12.5671888
+        },
+        {
+          "lat": 55.6826093,
+          "lon": 12.567171
+        },
+        {
+          "lat": 55.6826148,
+          "lon": 12.5671554
+        },
+        {
+          "lat": 55.6826387,
+          "lon": 12.5671868
+        },
+        {
+          "lat": 55.6826617,
+          "lon": 12.5671299
+        },
+        {
+          "lat": 55.6829194,
+          "lon": 12.5664857
+        },
+        {
+          "lat": 55.6828996,
+          "lon": 12.5663471
+        },
+        {
+          "lat": 55.6828834,
+          "lon": 12.5662391
+        },
+        {
+          "lat": 55.6820559,
+          "lon": 12.5655627
+        },
+        {
+          "lat": 55.6818955,
+          "lon": 12.5654313
+        },
+        {
+          "lat": 55.6818054,
+          "lon": 12.5653658
+        },
+        {
+          "lat": 55.6814136,
+          "lon": 12.5650778
+        },
+        {
+          "lat": 55.680404,
+          "lon": 12.564331
+        },
+        {
+          "lat": 55.6803571,
+          "lon": 12.5642997
+        },
+        {
+          "lat": 55.6801312,
+          "lon": 12.5641372
+        },
+        {
+          "lat": 55.6800282,
+          "lon": 12.5640631
+        },
+        {
+          "lat": 55.6798933,
+          "lon": 12.5641362
+        },
+        {
+          "lat": 55.6796537,
+          "lon": 12.5647605
+        }
+      ],
+      "tags": {
+        "leisure": "park",
+        "name": "Ørstedsparken",
+        "name:etymology": "H.C. Ørsted og Anders Sandøe Ørsted",
+        "name:etymology:wikidata": "Q44412;Q491280",
+        "wikidata": "Q2686981",
+        "wikipedia": "da:Ørstedsparken"
+      }
+    },
+    {
+      "type": "way",
+      "id": 36774301,
+      "bounds": {
+        "minlat": 55.7018848,
+        "minlon": 12.5583462,
+        "maxlat": 55.702077,
+        "maxlon": 12.5588374
+      },
+      "nodes": [
+        427561448,
+        5914568859,
+        4340872469,
+        4332887878,
+        4332887876,
+        4332887877,
+        4332887875,
+        427561450,
+        427561453,
+        427561448
+      ],
+      "geometry": [
+        {
+          "lat": 55.7019604,
+          "lon": 12.5583462
+        },
+        {
+          "lat": 55.7019255,
+          "lon": 12.5584422
+        },
+        {
+          "lat": 55.7018981,
+          "lon": 12.5585174
+        },
+        {
+          "lat": 55.7019346,
+          "lon": 12.5585591
+        },
+        {
+          "lat": 55.7018937,
+          "lon": 12.5586717
+        },
+        {
+          "lat": 55.7019116,
+          "lon": 12.5586923
+        },
+        {
+          "lat": 55.7018848,
+          "lon": 12.5587662
+        },
+        {
+          "lat": 55.7019469,
+          "lon": 12.5588374
+        },
+        {
+          "lat": 55.702077,
+          "lon": 12.5584797
+        },
+        {
+          "lat": 55.7019604,
+          "lon": 12.5583462
+        }
+      ],
+      "tags": {
+        "access": "private",
+        "alt_name": "Caféen?",
+        "amenity": "bar",
+        "building": "yes",
+        "check_date": "2026-07-10",
+        "fvst:name": "Foreningen til cafédrift af café",
+        "fvst:navnelbnr": "118221",
+        "name": "Caféen på Naturvidenskab",
+        "operator": "Foreningen til cafédrift af 1993 café",
+        "outdoor_seating": "yes",
+        "private": "students",
+        "ref:DK:cvr": "17223801",
+        "ref:DK:cvr:pnummer": "1001246648",
+        "website": "https://www.cafeen.org/"
+      }
+    },
+    {
+      "type": "way",
+      "id": 118353598,
+      "bounds": {
+        "minlat": 55.6828803,
+        "minlon": 12.5762918,
+        "maxlat": 55.6872981,
+        "maxlon": 12.5834343
+      },
+      "nodes": [
+        1331096000,
+        1871856398,
+        1331095990,
+        11613086978,
+        1871856391,
+        11613086976,
+        1871859101,
+        11613086975,
+        1871856387,
+        11613086977,
+        1871856395,
+        1871856406,
+        495116640,
+        11586953575,
+        1585667028,
+        10600618482,
+        10600618475,
+        10600618476,
+        10600618492,
+        10600618493,
+        10600626305,
+        10600618504,
+        10600626310,
+        10600626321,
+        10600626320,
+        10600626328,
+        10600626335,
+        10600626343,
+        10600626344,
+        10600626346,
+        1585667021,
+        11587054259,
+        11998547203,
+        495116641,
+        9959620866,
+        1331096011,
+        11998547202,
+        11998547201,
+        1331095994,
+        2355133864,
+        1331044284,
+        1331044278,
+        495165620,
+        495165618,
+        1331044298,
+        1331044333,
+        495165633,
+        495165630,
+        1331044355,
+        1331044341,
+        495165641,
+        495165639,
+        1331096002,
+        2355133852,
+        1331096013,
+        495165648,
+        495165646,
+        1331044318,
+        10601168454,
+        11998547179,
+        1331044327,
+        495165665,
+        495165663,
+        1331044293,
+        10601168495,
+        1184688417,
+        10601042331,
+        1331044329,
+        495165673,
+        495165671,
+        1331044351,
+        1331044335,
+        495165682,
+        495165680,
+        1331044357,
+        1331044300,
+        495165688,
+        495165687,
+        1331044319,
+        12641715196,
+        1331044306,
+        1184661378,
+        1184661510,
+        12641715198,
+        12641715194,
+        12641715199,
+        1184661504,
+        1184661303,
+        1331044305,
+        10601042328,
+        495165692,
+        495165691,
+        2380044957,
+        495165700,
+        495165698,
+        10601042288,
+        1184661421,
+        2380044956,
+        1003339375,
+        1003344414,
+        1003341576,
+        1027049517,
+        1027049521,
+        268123950,
+        12620623038,
+        12617782660,
+        600731529,
+        1331095992,
+        278165734,
+        12620623029,
+        1331096001,
+        1219207550,
+        1219207556,
+        1219207470,
+        1219207472,
+        12659526535,
+        1331096016,
+        11586953573,
+        1331096000
+      ],
+      "geometry": [
+        {
+          "lat": 55.68726,
+          "lon": 12.5783726
+        },
+        {
+          "lat": 55.687248,
+          "lon": 12.578426
+        },
+        {
+          "lat": 55.6872406,
+          "lon": 12.578482
+        },
+        {
+          "lat": 55.6872387,
+          "lon": 12.5785279
+        },
+        {
+          "lat": 55.6872382,
+          "lon": 12.5785394
+        },
+        {
+          "lat": 55.6872394,
+          "lon": 12.5785674
+        },
+        {
+          "lat": 55.6872406,
+          "lon": 12.5785958
+        },
+        {
+          "lat": 55.6872454,
+          "lon": 12.5786324
+        },
+        {
+          "lat": 55.6872482,
+          "lon": 12.5786531
+        },
+        {
+          "lat": 55.6872517,
+          "lon": 12.5786682
+        },
+        {
+          "lat": 55.6872605,
+          "lon": 12.5787067
+        },
+        {
+          "lat": 55.6872772,
+          "lon": 12.5787563
+        },
+        {
+          "lat": 55.6872981,
+          "lon": 12.5788009
+        },
+        {
+          "lat": 55.6872416,
+          "lon": 12.5790104
+        },
+        {
+          "lat": 55.6872248,
+          "lon": 12.5790727
+        },
+        {
+          "lat": 55.687201,
+          "lon": 12.5791608
+        },
+        {
+          "lat": 55.6871999,
+          "lon": 12.579165
+        },
+        {
+          "lat": 55.6871286,
+          "lon": 12.5794289
+        },
+        {
+          "lat": 55.6871091,
+          "lon": 12.5795014
+        },
+        {
+          "lat": 55.6870445,
+          "lon": 12.5797408
+        },
+        {
+          "lat": 55.6870254,
+          "lon": 12.5798116
+        },
+        {
+          "lat": 55.6869333,
+          "lon": 12.5801528
+        },
+        {
+          "lat": 55.6868978,
+          "lon": 12.5802845
+        },
+        {
+          "lat": 55.6867303,
+          "lon": 12.5809055
+        },
+        {
+          "lat": 55.6866503,
+          "lon": 12.5812016
+        },
+        {
+          "lat": 55.6866134,
+          "lon": 12.5813384
+        },
+        {
+          "lat": 55.6865348,
+          "lon": 12.5816297
+        },
+        {
+          "lat": 55.6865152,
+          "lon": 12.5817025
+        },
+        {
+          "lat": 55.6864571,
+          "lon": 12.5819177
+        },
+        {
+          "lat": 55.6864553,
+          "lon": 12.5819244
+        },
+        {
+          "lat": 55.6862729,
+          "lon": 12.5826004
+        },
+        {
+          "lat": 55.6861234,
+          "lon": 12.5831545
+        },
+        {
+          "lat": 55.6860813,
+          "lon": 12.583304
+        },
+        {
+          "lat": 55.6860611,
+          "lon": 12.5833759
+        },
+        {
+          "lat": 55.6860472,
+          "lon": 12.5833842
+        },
+        {
+          "lat": 55.6860337,
+          "lon": 12.5833918
+        },
+        {
+          "lat": 55.6860354,
+          "lon": 12.5834001
+        },
+        {
+          "lat": 55.6859937,
+          "lon": 12.5834262
+        },
+        {
+          "lat": 55.6859916,
+          "lon": 12.5834172
+        },
+        {
+          "lat": 55.6859784,
+          "lon": 12.583425
+        },
+        {
+          "lat": 55.6859628,
+          "lon": 12.5834343
+        },
+        {
+          "lat": 55.6855019,
+          "lon": 12.5830273
+        },
+        {
+          "lat": 55.685498,
+          "lon": 12.5830419
+        },
+        {
+          "lat": 55.6854557,
+          "lon": 12.5830062
+        },
+        {
+          "lat": 55.6854597,
+          "lon": 12.5829911
+        },
+        {
+          "lat": 55.685236,
+          "lon": 12.5828036
+        },
+        {
+          "lat": 55.6852321,
+          "lon": 12.5828181
+        },
+        {
+          "lat": 55.6851856,
+          "lon": 12.5827791
+        },
+        {
+          "lat": 55.6851895,
+          "lon": 12.5827645
+        },
+        {
+          "lat": 55.6849703,
+          "lon": 12.582576
+        },
+        {
+          "lat": 55.6849668,
+          "lon": 12.5825892
+        },
+        {
+          "lat": 55.68492,
+          "lon": 12.5825498
+        },
+        {
+          "lat": 55.6849237,
+          "lon": 12.5825359
+        },
+        {
+          "lat": 55.6848869,
+          "lon": 12.5825056
+        },
+        {
+          "lat": 55.6848493,
+          "lon": 12.5824746
+        },
+        {
+          "lat": 55.6848456,
+          "lon": 12.5824884
+        },
+        {
+          "lat": 55.6847971,
+          "lon": 12.5824477
+        },
+        {
+          "lat": 55.6848013,
+          "lon": 12.5824318
+        },
+        {
+          "lat": 55.6846722,
+          "lon": 12.5823255
+        },
+        {
+          "lat": 55.6842988,
+          "lon": 12.5820085
+        },
+        {
+          "lat": 55.684097,
+          "lon": 12.5818321
+        },
+        {
+          "lat": 55.6840943,
+          "lon": 12.581842
+        },
+        {
+          "lat": 55.6840472,
+          "lon": 12.5818023
+        },
+        {
+          "lat": 55.6840498,
+          "lon": 12.5817925
+        },
+        {
+          "lat": 55.6838494,
+          "lon": 12.5816167
+        },
+        {
+          "lat": 55.6838042,
+          "lon": 12.5815771
+        },
+        {
+          "lat": 55.6837648,
+          "lon": 12.5815444
+        },
+        {
+          "lat": 55.683554,
+          "lon": 12.5813696
+        },
+        {
+          "lat": 55.6835508,
+          "lon": 12.5813816
+        },
+        {
+          "lat": 55.683504,
+          "lon": 12.5813422
+        },
+        {
+          "lat": 55.6835071,
+          "lon": 12.5813306
+        },
+        {
+          "lat": 55.6833114,
+          "lon": 12.5811588
+        },
+        {
+          "lat": 55.6833068,
+          "lon": 12.5811759
+        },
+        {
+          "lat": 55.683259,
+          "lon": 12.5811358
+        },
+        {
+          "lat": 55.6832635,
+          "lon": 12.581119
+        },
+        {
+          "lat": 55.6830682,
+          "lon": 12.5809545
+        },
+        {
+          "lat": 55.6830644,
+          "lon": 12.5809688
+        },
+        {
+          "lat": 55.6830175,
+          "lon": 12.5809295
+        },
+        {
+          "lat": 55.6830211,
+          "lon": 12.5809162
+        },
+        {
+          "lat": 55.6829519,
+          "lon": 12.5808597
+        },
+        {
+          "lat": 55.6829446,
+          "lon": 12.5808537
+        },
+        {
+          "lat": 55.6829595,
+          "lon": 12.5807982
+        },
+        {
+          "lat": 55.6829165,
+          "lon": 12.5807636
+        },
+        {
+          "lat": 55.6829212,
+          "lon": 12.5807449
+        },
+        {
+          "lat": 55.6829128,
+          "lon": 12.5807048
+        },
+        {
+          "lat": 55.6829044,
+          "lon": 12.5806644
+        },
+        {
+          "lat": 55.682894,
+          "lon": 12.5806552
+        },
+        {
+          "lat": 55.6829156,
+          "lon": 12.580578
+        },
+        {
+          "lat": 55.6828803,
+          "lon": 12.5805474
+        },
+        {
+          "lat": 55.6833272,
+          "lon": 12.5788135
+        },
+        {
+          "lat": 55.6833475,
+          "lon": 12.5787346
+        },
+        {
+          "lat": 55.6833686,
+          "lon": 12.5786533
+        },
+        {
+          "lat": 55.6833924,
+          "lon": 12.5785642
+        },
+        {
+          "lat": 55.6834109,
+          "lon": 12.5784938
+        },
+        {
+          "lat": 55.6834317,
+          "lon": 12.5784129
+        },
+        {
+          "lat": 55.6839322,
+          "lon": 12.5765322
+        },
+        {
+          "lat": 55.6839358,
+          "lon": 12.5765185
+        },
+        {
+          "lat": 55.6839395,
+          "lon": 12.5765064
+        },
+        {
+          "lat": 55.6839581,
+          "lon": 12.5764457
+        },
+        {
+          "lat": 55.6849264,
+          "lon": 12.5776171
+        },
+        {
+          "lat": 55.6854377,
+          "lon": 12.5765241
+        },
+        {
+          "lat": 55.6856056,
+          "lon": 12.5767358
+        },
+        {
+          "lat": 55.685739,
+          "lon": 12.5762918
+        },
+        {
+          "lat": 55.6858176,
+          "lon": 12.5765142
+        },
+        {
+          "lat": 55.6858263,
+          "lon": 12.5765051
+        },
+        {
+          "lat": 55.6858358,
+          "lon": 12.5764953
+        },
+        {
+          "lat": 55.6861399,
+          "lon": 12.576473
+        },
+        {
+          "lat": 55.6861516,
+          "lon": 12.576445
+        },
+        {
+          "lat": 55.6861863,
+          "lon": 12.5763675
+        },
+        {
+          "lat": 55.6862665,
+          "lon": 12.5764921
+        },
+        {
+          "lat": 55.6862904,
+          "lon": 12.5765292
+        },
+        {
+          "lat": 55.6863177,
+          "lon": 12.5765717
+        },
+        {
+          "lat": 55.6864395,
+          "lon": 12.5767864
+        },
+        {
+          "lat": 55.686637,
+          "lon": 12.5771743
+        },
+        {
+          "lat": 55.6870125,
+          "lon": 12.577898
+        },
+        {
+          "lat": 55.6870339,
+          "lon": 12.5779351
+        },
+        {
+          "lat": 55.687054,
+          "lon": 12.57797
+        },
+        {
+          "lat": 55.6872014,
+          "lon": 12.5782522
+        },
+        {
+          "lat": 55.68726,
+          "lon": 12.5783726
+        }
+      ],
+      "tags": {
+        "fee": "no",
+        "leisure": "park",
+        "name": "Kongens Have",
+        "name:da": "Kongens Have",
+        "name:de": "Königsgarten",
+        "name:en": "King's Garden",
+        "name:etymology:wikidata": "Q153586",
+        "name:ko": "왕의 정원",
+        "name:zh": "羅森堡花園",
+        "opening_hours": "07:00-17:00; Mar 07:00-19:00; Apr 07:00-21:00; May-Aug 07:00-22:00; Sep 07:00-21:00; Oct 07:00-19:00",
+        "website": "https://www.parkmuseerne.dk/parker/kongens-have",
+        "wikidata": "Q1898947",
+        "wikipedia": "da:Kongens Have"
+      }
+    },
+    {
+      "type": "way",
+      "id": 529519844,
+      "bounds": {
+        "minlat": 55.6804514,
+        "minlon": 12.5944412,
+        "maxlat": 55.682876,
+        "maxlon": 12.5970128
+      },
+      "nodes": [
+        5143560724,
+        5773418231,
+        4290380326,
+        8594906755,
+        8594906739,
+        8594906756,
+        8594911566,
+        2031140228,
+        2031140232,
+        3835824230,
+        11524129241,
+        11524129238,
+        4040241109,
+        5237664673,
+        3576158516,
+        5143560724
+      ],
+      "geometry": [
+        {
+          "lat": 55.6806082,
+          "lon": 12.5944412
+        },
+        {
+          "lat": 55.6808904,
+          "lon": 12.5946783
+        },
+        {
+          "lat": 55.6810992,
+          "lon": 12.5948494
+        },
+        {
+          "lat": 55.6811658,
+          "lon": 12.5949047
+        },
+        {
+          "lat": 55.6812006,
+          "lon": 12.5949337
+        },
+        {
+          "lat": 55.681231,
+          "lon": 12.594959
+        },
+        {
+          "lat": 55.6817802,
+          "lon": 12.5954137
+        },
+        {
+          "lat": 55.682876,
+          "lon": 12.5963212
+        },
+        {
+          "lat": 55.6826886,
+          "lon": 12.5970128
+        },
+        {
+          "lat": 55.681801,
+          "lon": 12.5962849
+        },
+        {
+          "lat": 55.6810662,
+          "lon": 12.5956762
+        },
+        {
+          "lat": 55.6807218,
+          "lon": 12.5953908
+        },
+        {
+          "lat": 55.6805529,
+          "lon": 12.5952509
+        },
+        {
+          "lat": 55.6804979,
+          "lon": 12.5952054
+        },
+        {
+          "lat": 55.6804514,
+          "lon": 12.5951669
+        },
+        {
+          "lat": 55.6806082,
+          "lon": 12.5944412
+        }
+      ],
+      "tags": {
+        "name": "Ofelia Plads",
+        "name:etymology:wikidata": "Q1800888",
+        "place": "square",
+        "wikidata": "Q12329915",
+        "wikipedia": "da:Ofelia Plads"
+      }
+    }
+  ]
+}

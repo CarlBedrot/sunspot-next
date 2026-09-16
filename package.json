@@ -8,7 +8,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run && node --test tests/*.test.js",
+    "test:browser": "node scripts/verify-browser.mjs",
+    "test:solar": "node scripts/verify-solar.mjs",
+    "data:buildings": "node scripts/import-buildings.mjs",
+    "data:parks": "node scripts/import-parks.mjs && npm run data:venues",
+    "data:venues": "node scripts/build-venue-data.mjs"
   },
   "dependencies": {
     "@turf/turf": "^7.4.0",
@@ -17,7 +22,10 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-leaflet": "^5.0.0",
-    "suncalc": "^2.0.2"
+    "suncalc": "^2.0.2",
+    "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
+    "lucide-react": "^1.46.0"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.22",
@@ -29,6 +37,18 @@
     "eslint-config-next": "16.3.5",
     "typescript": "^5",
     "vite": "^8.3.0",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.1",
+    "@playwright/test": "^1.63.0",
+    "agent-browser": "^0.38.0",
+    "osmtogeojson": "^3.0.0-beta.5"
+  },
+  "type": "module",
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0 || >=26.0.0"
+  },
+  "overrides": {
+    "osmtogeojson": {
+      "@xmldom/xmldom": "^0.9.12"
+    }
   }
 }
