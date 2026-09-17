@@ -2874,3 +2874,124 @@ textarea {
     padding: 10px 14px;
   }
 }
+
+/* Keep the map quiet: groups at city scale, details on demand. */
+.cluster-pin {
+  min-width: 54px;
+  height: 38px;
+  padding: 3px 10px 3px 3px;
+  gap: 4px;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 2px 8px #243a5220;
+}
+.cluster-pin > span {
+  width: 28px;
+  height: 28px;
+  font-size: 17px;
+  background: var(--cream);
+}
+.cluster-pin b {
+  display: block;
+  font-size: 13px;
+}
+.place-pin[hidden] {
+  display: none;
+}
+.map-tools-toggle,
+.mobile-gatherings {
+  display: none;
+}
+.building-shadows[data-pending="true"] {
+  visibility: hidden;
+}
+@media (max-width: 760px) {
+  .map-header {
+    display: none;
+  }
+  .map-workspace {
+    top: 0;
+  }
+  .map-toolbar {
+    top: calc(10px + env(safe-area-inset-top));
+  }
+  .map-toolbar .search-box {
+    border-radius: 18px;
+  }
+  .map-toolbar .activity-tabs {
+    margin-top: 8px;
+  }
+  .map-toolbar .activity-tabs button {
+    min-height: 40px;
+  }
+  .map-tools-toggle {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    z-index: 620;
+    right: 12px;
+    bottom: calc(174px + env(safe-area-inset-bottom));
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--surface);
+    box-shadow: 0 3px 14px #243a5220;
+  }
+  .map-tools:not(.is-open) {
+    display: none;
+  }
+  .map-workspace .map-tools .map-controls {
+    top: auto;
+    bottom: calc(225px + env(safe-area-inset-bottom));
+    right: 12px;
+  }
+  .map-workspace .map-tools .map-layer-controls {
+    top: auto;
+    left: auto;
+    right: 62px;
+    bottom: calc(174px + env(safe-area-inset-bottom));
+  }
+  .map-workspace .shadow-legend {
+    top: auto;
+    bottom: calc(225px + env(safe-area-inset-bottom));
+    left: 12px;
+    right: 66px;
+  }
+  .time-dock {
+    padding: 8px 12px;
+    border-radius: 24px;
+  }
+  .time-dock .range-labels {
+    display: none;
+  }
+  .time-dock .days button {
+    padding: 3px 2px;
+    min-height: 38px;
+  }
+  .time-dock .time-label {
+    margin-top: 4px;
+  }
+  .time-dock .timeline-status {
+    margin-top: 3px;
+    min-height: 24px;
+  }
+  .map-workspace .leaflet-bottom {
+    bottom: 162px;
+  }
+  .map-workspace .detail-card,
+  .map-workspace :is(.touchgrass, .venue-focus) .detail-card {
+    bottom: calc(172px + env(safe-area-inset-bottom));
+  }
+  .map-workspace .event-sheet {
+    bottom: calc(172px + env(safe-area-inset-bottom));
+  }
+  .mobile-gatherings {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .place-pin {
+    box-shadow: 0 2px 6px #243a5220;
+  }
+}

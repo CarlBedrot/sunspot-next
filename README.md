@@ -21,9 +21,9 @@ No API keys are required for the local pilot. Invitations and the MET Norway wea
 
 ## What is integrated
 
-- Full-screen map, mobile controls and a continuous seven-day time slider.
+- Full-screen map, compact mobile controls and a continuous seven-day time slider. Nearby places form tappable groups at city scale; search and the list retain the full selection.
 - Touchgrass, bar, restaurant and event filters; partial shade does not exclude an entire park.
-- 163 places, 139 OSM park areas and a building-shadow model with 19,523 buildings. The solar analysis runs in a Web Worker and follows the selected time.
+- 163 places, 139 OSM park areas and a building-shadow model with 19,523 buildings. Solar analysis and shadow rasterization run in separate Web Workers and follow the selected time. Older browsers use a throttled canvas fallback.
 - Real events from Københavns Biblioteker, plus a curated Luma example, with a weekly discovery list and rich event details. Markers follow event start/end times; fictional demo events are optional and off by default.
 - MET Norway forecasts for the selected time, invitations, guest RSVPs and host cancellation.
 - Editable seating points and in-app solar warnings. System notifications require user activation and a running app; this is not background push.
@@ -39,6 +39,7 @@ npm run build
 npm run test:browser     # requires a running app on port 3000
 npm run test:solar
 npm run test:events      # event feed, mobile details and timeline behaviour
+npm run test:map         # grouping, mobile layout, worker/fallback and responsiveness
 ```
 
 For browser tests, install Chromium with `npx playwright install chromium`, or set `SUNSPOT_BROWSER_PATH` to an existing Chrome executable. Override the app URL with `SUNSPOT_URL=http://localhost:4174`. Tests create and cancel their own local invitations.

@@ -41,8 +41,14 @@ try {
     .getByRole("textbox", { name: "Sök plats eller område" })
     .fill("ingenting");
   await page.getByRole("button", { name: "Alla", exact: true }).click();
-  await expect(page.locator(".place-pin:not(.event-pin)")).toHaveCount(
-    places.length,
+  await page
+    .getByRole("button", { name: "Visa platslista", exact: true })
+    .click();
+  await expect(page.locator(".place-list h3")).toHaveCount(places.length);
+  await page.keyboard.press("Escape");
+  assert.ok(
+    (await page.locator(".place-pin:not(.event-pin)").count()) < places.length,
+    "city overview groups places",
   );
   for (const [label, category] of [
     ["Bar", "bar"],
@@ -50,9 +56,13 @@ try {
   ]) {
     await page.getByRole("button", { name: label, exact: true }).click();
     await expect(page.locator(".venue-focus-veil")).toHaveCount(1);
-    await expect(page.locator(".place-pin:not(.event-pin)")).toHaveCount(
+    await page
+      .getByRole("button", { name: "Visa platslista", exact: true })
+      .click();
+    await expect(page.locator(".place-list h3")).toHaveCount(
       places.filter((p) => p.category === category).length,
     );
+    await page.keyboard.press("Escape");
   }
   await page.getByRole("button", { name: "Touchgrass", exact: true }).click();
   await expect(page.locator(".park-focus-outline")).toHaveCount(
@@ -204,7 +214,15 @@ try {
   await expect(
     page.getByText("Skuggdata kunde inte laddas.", { exact: true }),
   ).toBeVisible();
+  // The active demo is outside the initial mobile viewport; discovery still
+  // works without shadow data and selecting it brings its marker into view.
+  await page.getByRole("button", { name: "Visa veckans event" }).click();
+  await page
+    .getByRole("dialog", { name: "Event denna vecka" })
+    .getByRole("button", { name: /Livemusik · demo/ })
+    .click();
   await expect(page.locator(".event-pin")).toHaveCount(1);
+  await page.getByRole("button", { name: "Stäng event" }).click();
   await page.unroute("**/data/copenhagen-buildings.json");
   await page.getByRole("button", { name: "Försök igen", exact: true }).click();
   await ready();

@@ -553,6 +553,7 @@ export default function App() {
               </div>
             </div>
             <MapView
+              pending={solar.pending}
               category={category}
               viewReset={viewReset}
               places={filtered}
@@ -879,6 +880,12 @@ export default function App() {
                 </button>
                 <button className="primary wide" onClick={() => setModal(null)}>
                   Visa kartan <ChevronRight size={18} />
+                </button>
+                <button
+                  className="text-button mobile-gatherings"
+                  onClick={() => setModal("gatherings")}
+                >
+                  <Users size={16} /> Mina träffar
                 </button>
                 <button
                   className="text-button"

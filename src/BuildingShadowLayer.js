@@ -1,19 +1,14 @@
 import L from "leaflet";
 import { mapColors } from "./theme.js";
-import * as SunCalc from "suncalc";
-import {
-  coverageBounds,
-  shadowOffset,
-  wallQuads,
-  MIN_SUN_ALTITUDE,
-} from "./shadows.js";
+import { ShadowRenderer } from "./shadowRenderer.js";
 
-// Opaque shapes on one translucent canvas: overlapping shadows keep the same shade.
+// Geometry/raster work stays off the UI thread. Only the latest view may paint.
 export default class BuildingShadowLayer extends L.Layer {
   constructor(data, instant) {
     super();
     this.data = data;
     this.instant = instant;
+    this.sequence = 0;
   }
   onAdd(map) {
     this.map = map;
@@ -24,157 +19,119 @@ export default class BuildingShadowLayer extends L.Layer {
     pane.style.pointerEvents = "none";
     this.canvas = L.DomUtil.create("canvas", "building-shadows", pane);
     this.canvas.setAttribute("aria-hidden", "true");
+    this.startWorker();
     this.schedule = () => {
+      this.sequence++;
+      this.canvas.dataset.pending = "true";
       cancelAnimationFrame(this.frame);
-      this.frame = requestAnimationFrame(() => this.draw());
+      this.frame = requestAnimationFrame(() => this.requestDraw());
     };
     this.hide = () => {
+      this.sequence++;
       this.canvas.style.visibility = "hidden";
     };
     map.on("moveend zoomend resize viewreset", this.schedule);
-    map.on("zoomstart", this.hide);
+    map.on("movestart zoomstart", this.hide);
     this.schedule();
+  }
+  startWorker() {
+    if (typeof OffscreenCanvas === "undefined" || typeof Worker === "undefined")
+      return;
+    try {
+      this.worker = new Worker(
+        new URL("./shadow-render.worker.js", import.meta.url),
+        { type: "module" },
+      );
+      this.worker.onmessage = ({ data }) => {
+        this.busy = false;
+        if (!this.map) {
+          data.bitmap?.close();
+          return;
+        }
+        if (data.error) {
+          this.useFallback();
+          return;
+        }
+        if (data.id === this.sequence)
+          this.paint(data.bitmap, data.metadata, this.inFlight);
+        data.bitmap.close();
+        this.pump();
+      };
+      this.worker.onerror = () => this.useFallback();
+      this.worker.postMessage({ type: "init", buildings: this.data });
+    } catch {
+      this.useFallback();
+    }
+  }
+  useFallback() {
+    this.worker?.terminate();
+    this.worker = null;
+    this.busy = false;
+    if (this.map) this.requestDraw();
   }
   onRemove(map) {
     cancelAnimationFrame(this.frame);
+    clearTimeout(this.fallbackTimer);
     map.off("moveend zoomend resize viewreset", this.schedule);
-    map.off("zoomstart", this.hide);
+    map.off("movestart zoomstart", this.hide);
+    this.worker?.terminate();
+    this.worker = null;
+    this.queued = null;
     this.canvas.remove();
     this.map = null;
   }
   setInstant(instant) {
+    if (this.instant.getTime() === instant.getTime()) return;
     this.instant = instant;
     this.schedule?.();
   }
-  draw() {
+  requestDraw() {
     if (!this.map) return;
-    const map = this.map,
-      canvas = this.canvas,
-      size = map.getSize(),
-      zoom = map.getZoom();
-    const ratio = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = size.x * ratio;
-    canvas.height = size.y * ratio;
-    canvas.style.width = `${size.x}px`;
-    canvas.style.height = `${size.y}px`;
-    canvas.style.visibility = "";
-    L.DomUtil.setPosition(canvas, map.containerPointToLayerPoint([0, 0]));
-    const ctx = canvas.getContext("2d");
-    ctx.scale(ratio, ratio);
-    const [west, south, east, north] = this.data.bounds;
-    const latitude = (south + north) / 2;
-    const position = SunCalc.getPosition(
-      this.instant,
-      latitude,
-      (west + east) / 2,
-    );
-    const mode =
-      position.altitude <= 0
-        ? "night"
-        : position.altitude < MIN_SUN_ALTITUDE
-          ? "low-sun"
-          : "day";
-    canvas.dataset.mode = mode;
-    canvas.dataset.instant = this.instant.toISOString();
-    canvas.dataset.buildings = "0";
-    if (mode === "night") {
-      ctx.fillStyle = this.colors.ink;
-      ctx.fillRect(0, 0, size.x, size.y);
-      return;
-    }
-    const coverage = coverageBounds(
-      this.data.bounds,
-      this.data.maxHeight,
-      position,
-    );
-    let rect;
-    if (coverage) {
-      const a = map.latLngToContainerPoint([coverage[3], coverage[0]]);
-      const b = map.latLngToContainerPoint([coverage[1], coverage[2]]);
-      rect = [a.x, a.y, b.x - a.x, b.y - a.y];
-    }
-    // Stripe outside coverage; empty map there must not suggest sunlight.
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(0, 0, size.x, size.y);
-    if (rect) ctx.rect(...rect);
-    ctx.clip("evenodd");
-    ctx.strokeStyle = this.colors.blue;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    for (let x = -size.y; x < size.x; x += 16) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x + size.y, size.y);
-    }
-    ctx.stroke();
-    ctx.restore();
-    if (!rect) return;
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(...rect);
-    ctx.clip();
-    if (this.projectedZoom !== zoom) {
-      this.projected = this.data.buildings.map((building) => {
-        let minX = Infinity,
-          minY = Infinity,
-          maxX = -Infinity,
-          maxY = -Infinity;
-        const polygons = building.polygons.map((p) =>
-          p.map((r) =>
-            r.map(([lon, lat]) => {
-              const v = map.project([lat, lon], zoom);
-              minX = Math.min(minX, v.x);
-              maxX = Math.max(maxX, v.x);
-              minY = Math.min(minY, v.y);
-              maxY = Math.max(maxY, v.y);
-              return [v.x, v.y];
-            }),
-          ),
-        );
-        return {
-          height: building.height,
-          polygons,
-          bounds: [minX, minY, maxX, maxY],
-        };
-      });
-      this.projectedZoom = zoom;
-    }
-    const origin = map.project(map.containerPointToLatLng([0, 0]), zoom);
-    const metersPerPixel =
-      (40075016.68557849 * Math.cos((latitude * Math.PI) / 180)) /
-      (256 * 2 ** zoom);
-    const trace = (rings, dx = 0, dy = 0) => {
-      ctx.beginPath();
-      for (const ring of rings) {
-        ring.forEach(([x, y], i) =>
-          ctx[i ? "lineTo" : "moveTo"](x - origin.x + dx, y - origin.y + dy),
-        );
-        ctx.closePath();
-      }
-      ctx.fill("evenodd");
+    const topLeft = this.map.containerPointToLatLng([0, 0]);
+    const view = {
+      size: this.map.getSize(),
+      zoom: this.map.getZoom(),
+      ratio: Math.min(devicePixelRatio || 1, 2),
+      topLeft: [topLeft.lat, topLeft.lng],
+      instant: this.instant.toISOString(),
+      colors: this.colors,
+      position: this.map.containerPointToLayerPoint([0, 0]),
     };
-    let count = 0;
-    ctx.fillStyle = this.colors.blue;
-    for (const building of this.projected) {
-      const offset = shadowOffset(building.height, position);
-      const dx = offset.east / metersPerPixel,
-        dy = -offset.north / metersPerPixel;
-      const [x1, y1, x2, y2] = building.bounds;
-      if (
-        x2 + Math.max(0, dx) < origin.x ||
-        x1 + Math.min(0, dx) > origin.x + size.x ||
-        y2 + Math.max(0, dy) < origin.y ||
-        y1 + Math.min(0, dy) > origin.y + size.y
-      )
-        continue;
-      count++;
-      for (const polygon of building.polygons) {
-        trace(polygon);
-        trace(polygon, dx, dy);
-        for (const quad of wallQuads(polygon, dx, dy)) trace([quad]);
-      }
+    this.queued = { type: "draw", id: this.sequence, view };
+    if (this.worker) this.pump();
+    else {
+      clearTimeout(this.fallbackTimer);
+      this.fallbackTimer = setTimeout(() => {
+        if (!this.map) return;
+        this.renderer ??= new ShadowRenderer(this.data);
+        const { view, id } = this.queued;
+        const buffer = document.createElement("canvas");
+        const metadata = this.renderer.draw(buffer, view);
+        if (id === this.sequence) this.paint(buffer, metadata, view);
+      }, 90);
     }
-    ctx.restore();
-    canvas.dataset.buildings = String(count);
+  }
+  pump() {
+    if (this.busy || !this.queued || !this.worker) return;
+    const request = this.queued;
+    this.queued = null;
+    this.busy = true;
+    this.inFlight = request.view;
+    this.worker.postMessage(request);
+  }
+  paint(bitmap, metadata, view) {
+    const canvas = this.canvas;
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+    canvas.style.width = `${view.size.x}px`;
+    canvas.style.height = `${view.size.y}px`;
+    L.DomUtil.setPosition(canvas, view.position);
+    canvas.getContext("2d").drawImage(bitmap, 0, 0);
+    Object.assign(canvas.dataset, metadata, {
+      pending: "false",
+      zoom: String(view.zoom),
+      renderer: this.worker ? "worker" : "main",
+    });
+    canvas.style.visibility = "";
   }
 }

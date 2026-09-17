@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import { mapColors } from "./theme.js";
 import { Plus, Minus, LocateFixed, Layers, Info } from "lucide-react";
+import { groupMapMarkers } from "./mapMarkers.js";
 import { atHour } from "./lib.js";
 
 import * as SunCalc from "suncalc";
@@ -11,6 +12,7 @@ import { venueFocusLayer, fitPlacesView } from "./VenueFocusLayer.js";
 import { places as allPlaces } from "./places.js";
 
 export default function MapView({
+  pending = false,
   category = "all",
   viewReset = 0,
   places,
@@ -37,7 +39,9 @@ export default function MapView({
     layer = useRef(null);
   const shadowLayer = useRef(null);
   const seatLayer = useRef(null);
-  const [zoom, setZoom] = useState(14);
+  const markers = useRef(new Map());
+  const lastPlaces = useRef([]);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
   const [zones, setZones] = useState(true),
     [tileError, setTileError] = useState(false);
@@ -49,7 +53,8 @@ export default function MapView({
       maxZoom: 18,
     }).setView([55.683, 12.581], 14);
     map.current = m;
-    m.on("zoomend", () => setZoom(m.getZoom()));
+    const registry = markers.current;
+
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -64,48 +69,112 @@ export default function MapView({
     return () => {
       observer.disconnect();
       m.remove();
+      registry.clear();
       map.current = null;
     };
   }, []);
   useEffect(() => {
     if (!map.current) return;
-    layer.current.clearLayers();
-    if (editing) return;
-    [...places, ...events].forEach((p) => {
-      const result = results[p.id];
-      const compact =
-        p.category !== "event" &&
-        zoom < (touchgrass ? 15 : 16) &&
-        selected?.id !== p.id;
-      const button = document.createElement("button");
-      button.className = `place-pin ${p.category === "event" ? "event-pin" : ""} ${selected?.id === p.id ? "active" : ""} ${result?.state === "sun" ? "sunny" : ""} ${compact ? "compact" : ""}`;
-      button.setAttribute("aria-label", `Visa ${p.name}`);
-      button.title = p.name;
-      button.dataset.id = p.id;
-      const emoji = document.createElement("span"),
-        name = document.createElement("b");
-      emoji.textContent = p.emoji;
-      name.textContent = p.name;
-      button.append(emoji, name);
-      const icon = L.divIcon({
-        className: "place-pin-wrap",
-        html: button,
-        iconSize: [compact ? 42 : 140, 42],
-        iconAnchor: [24, 42],
-      });
-      L.marker(
-        result?.point ? [result.point[1], result.point[0]] : [p.lat, p.lng],
-        {
-          icon,
-          keyboard: false,
-          zIndexOffset:
-            selected?.id === p.id ? 1000 : p.category === "event" ? 800 : 0,
-        },
-      )
-        .on("click", () => onSelect(p))
-        .addTo(layer.current);
-    });
-  }, [places, events, selected, results, onSelect, zoom, editing, touchgrass]);
+    const m = map.current;
+    const registry = markers.current;
+    if (!pending) lastPlaces.current = places;
+    const update = () => {
+      const zoom = m.getZoom();
+      const bounds = m.getBounds().pad(0.04);
+      const items = editing
+        ? []
+        : groupMapMarkers(
+            [
+              ...(pending ? lastPlaces.current : places).map((p) => {
+                const point = results[p.id]?.point;
+                return point ? { ...p, lat: point[1], lng: point[0] } : p;
+              }),
+              ...events,
+            ],
+            {
+              project: (p) => m.project([p.lat, p.lng], zoom),
+              zoom,
+              selectedId: selected?.id,
+              bounds: {
+                south: bounds.getSouth(),
+                north: bounds.getNorth(),
+                west: bounds.getWest(),
+                east: bounds.getEast(),
+              },
+            },
+          );
+      const wanted = new Set(items.map((p) => p.markerId));
+      for (const [id, record] of registry) {
+        if (!wanted.has(id)) {
+          layer.current.removeLayer(record.marker);
+          registry.delete(id);
+        }
+      }
+      for (const p of items) {
+        const active = selected?.id === p.id;
+        const compact = !active && zoom < 16;
+        let record = registry.get(p.markerId);
+        if (!record) {
+          const button = document.createElement("button");
+          const emoji = document.createElement("span"),
+            name = document.createElement("b");
+          button.append(emoji, name);
+          const marker = L.marker([p.lat, p.lng], {
+            keyboard: false,
+            icon: L.divIcon({
+              className: "place-pin-wrap",
+              html: button,
+              iconSize: [42, 42],
+              iconAnchor: [21, 42],
+            }),
+          }).addTo(layer.current);
+          record = { marker, button, emoji, name, item: p };
+          marker.on("click", () => {
+            const item = record.item;
+            if (item.members) {
+              m.fitBounds(
+                item.members.map((v) => [v.lat, v.lng]),
+                {
+                  maxZoom: Math.min(17, m.getZoom() + 2),
+                  padding: [70, 150],
+                  animate: !window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                  ).matches,
+                },
+              );
+            } else onSelect(item);
+          });
+          registry.set(p.markerId, record);
+        }
+        record.item = p;
+        const signature = `${p.name}|${p.emoji}|${active}|${compact}|${results[p.id]?.state}|${p.members?.length}`;
+        if (signature !== record.signature) {
+          record.button.className = `place-pin ${p.members ? "cluster-pin" : ""} ${p.category === "event" ? "event-pin" : ""} ${active ? "active" : ""} ${results[p.id]?.state === "sun" ? "sunny" : ""} ${compact && !p.members ? "compact" : ""}`;
+          record.button.setAttribute(
+            "aria-label",
+            p.members ? `Zooma in: ${p.name}` : `Visa ${p.name}`,
+          );
+          record.button.title = p.members
+            ? `${p.name} · tryck för att zooma`
+            : p.name;
+          record.button.dataset.id = p.id;
+          record.emoji.textContent = p.emoji;
+          record.name.textContent = p.members ? p.members.length : p.name;
+          record.marker.setZIndexOffset(
+            active ? 1000 : p.category === "event" ? 800 : 0,
+          );
+          record.signature = signature;
+        }
+        record.button.hidden = pending && p.category !== "event";
+        const current = record.marker.getLatLng();
+        if (current.lat !== p.lat || current.lng !== p.lng)
+          record.marker.setLatLng([p.lat, p.lng]);
+      }
+    };
+    update();
+    m.on("moveend zoomend resize", update);
+    return () => m.off("moveend zoomend resize", update);
+  }, [places, events, selected, results, onSelect, editing, pending]);
   useEffect(() => {
     if (selected?.greenSpace && touchgrass && map.current) {
       fitParkView(map.current, selected.id);
@@ -223,46 +292,56 @@ export default function MapView({
       aria-label="Karta över platser i Köpenhamn"
     >
       <div ref={container} className="map" />
-      <div className="map-controls">
-        <button onClick={() => map.current?.zoomIn()} aria-label="Zooma in">
-          <Plus size={19} />
-        </button>
-        <button onClick={() => map.current?.zoomOut()} aria-label="Zooma ut">
-          <Minus size={19} />
-        </button>
-        <button
-          onClick={() =>
-            touchgrass
-              ? map.current && fitParkView(map.current)
-              : map.current &&
-                fitPlacesView(
-                  map.current,
-                  allPlaces.filter(
-                    (p) => category === "all" || p.category === category,
-                  ),
-                )
-          }
-          aria-label="Visa hela området"
-        >
-          <LocateFixed size={19} />
-        </button>
-      </div>
-      <div className="map-layer-controls">
-        <button
-          className={zones ? "on" : ""}
-          onClick={() => setZones(!zones)}
-          aria-label="Byggnadsskuggor"
-          aria-pressed={zones}
-        >
-          <Layers size={17} /> Skuggor
-        </button>
-        <button
-          aria-label="Om kartan"
-          aria-expanded={legendOpen}
-          onClick={() => setLegendOpen((open) => !open)}
-        >
-          <Info size={17} />
-        </button>
+      <button
+        className="map-tools-toggle"
+        aria-label="Kartverktyg"
+        aria-expanded={toolsOpen}
+        onClick={() => setToolsOpen((v) => !v)}
+      >
+        <Layers size={19} />
+      </button>
+      <div className={`map-tools ${toolsOpen ? "is-open" : ""}`}>
+        <div className="map-controls">
+          <button onClick={() => map.current?.zoomIn()} aria-label="Zooma in">
+            <Plus size={19} />
+          </button>
+          <button onClick={() => map.current?.zoomOut()} aria-label="Zooma ut">
+            <Minus size={19} />
+          </button>
+          <button
+            onClick={() =>
+              touchgrass
+                ? map.current && fitParkView(map.current)
+                : map.current &&
+                  fitPlacesView(
+                    map.current,
+                    allPlaces.filter(
+                      (p) => category === "all" || p.category === category,
+                    ),
+                  )
+            }
+            aria-label="Visa hela området"
+          >
+            <LocateFixed size={19} />
+          </button>
+        </div>
+        <div className="map-layer-controls">
+          <button
+            className={zones ? "on" : ""}
+            onClick={() => setZones(!zones)}
+            aria-label="Byggnadsskuggor"
+            aria-pressed={zones}
+          >
+            <Layers size={17} /> Skuggor
+          </button>
+          <button
+            aria-label="Om kartan"
+            aria-expanded={legendOpen}
+            onClick={() => setLegendOpen((open) => !open)}
+          >
+            <Info size={17} />
+          </button>
+        </div>
       </div>
       {zones && (legendOpen || dataError) && (
         <div className="zone-note shadow-legend" role="status">
