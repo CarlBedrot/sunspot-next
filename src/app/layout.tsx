@@ -1,15 +1,22 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type { Metadata } from "next";
+import "leaflet/dist/leaflet.css";
+import "../styles.css";
 
 export const metadata: Metadata = {
-  title: 'Sunspot',
-  description: 'Where the sun still reaches in Copenhagen, right now.',
-}
+  title: "SunSpot — Sun guides your decision",
+  description:
+    "Hitta soliga parker, barer och restauranger i Köpenhamn och planera en träff med vänner.",
+  icons: { icon: "/favicon.svg" },
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
+    <html lang="sv">
       <body>{children}</body>
     </html>
-  )
+  );
 }
