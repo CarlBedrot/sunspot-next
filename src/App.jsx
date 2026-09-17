@@ -1076,8 +1076,28 @@ export default function App() {
             </p>
             <h3>Det här är riktig data</h3>
             <p>
-              Platsnamn och kartpositioner kommer från OpenStreetMap. Väder
-              hämtas från MET Norway. Soluppgång och solnedgång beräknas med
+              Platsnamn och kartpositioner kommer från{" "}
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                target="_blank"
+                rel="noreferrer"
+              >
+                OpenStreetMap
+              </a>{" "}
+              (ODbL). Väder hämtas från{" "}
+              <a href="https://www.met.no/" target="_blank" rel="noreferrer">
+                MET Norway
+              </a>{" "}
+              (Norsk lisens for offentlige data / CC BY 4.0). Evenemang hämtas
+              från{" "}
+              <a
+                href="https://bibliotek.kk.dk/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Københavns Biblioteker
+              </a>
+              &apos;s öppna API. Soluppgång och solnedgång beräknas med
               SunCalc.
             </p>
             <h3>Beräknade byggnadsskuggor</h3>
