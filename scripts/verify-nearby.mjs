@@ -16,6 +16,7 @@ page.on("pageerror", (e) => errors.push(e.message));
 const ready = () =>
   page.locator('.map-workspace[data-solar-pending="false"]').waitFor();
 try {
+  await page.addInitScript(() => localStorage.setItem("sunspot:language", "sv"));
   await page.clock.setSystemTime(new Date("2026-09-17T14:00:00Z"));
   await page.addInitScript(() => {
     window.locationRequests = 0;

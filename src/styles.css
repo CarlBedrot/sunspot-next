@@ -3109,3 +3109,27 @@ textarea {
     min-height: 32px;
   }
 }
+
+.language-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 4px 0 18px;
+  font-size: 14px;
+  color: var(--ink);
+}
+.language-select select {
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+.invite-language {
+  max-width: 540px;
+  margin: 16px auto 0;
+  padding: 0 20px;
+}

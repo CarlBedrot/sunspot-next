@@ -33,6 +33,7 @@ async function open(fallback = false) {
     reducedMotion: "reduce",
   });
   page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() => localStorage.setItem("sunspot:language", "sv"));
   await page.clock.setSystemTime(new Date("2026-09-17T12:00:00Z"));
   if (fallback)
     await page.addInitScript(() => {

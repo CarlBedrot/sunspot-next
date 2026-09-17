@@ -1,3 +1,4 @@
+import { useLanguage } from "./Language.jsx";
 import { useEffect, useRef, useState } from "react";
 import { MapPin, Sun, ArrowUpRight } from "lucide-react";
 import {
@@ -7,7 +8,6 @@ import {
 } from "./nearby.js";
 import { clock, localDate, weatherText } from "./lib.js";
 import { terraceLabel } from "./venueEvidence.js";
-
 export default function NearbyPlaces({
   places,
   results,
@@ -19,6 +19,7 @@ export default function NearbyPlaces({
   onNow,
   onSelect,
 }) {
+  const { t } = useLanguage();
   const [origin, setOrigin] = useState(null);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
@@ -53,7 +54,10 @@ export default function NearbyPlaces({
           return;
         }
         onNow();
-        setOrigin({ point, name: "din position" });
+        setOrigin({
+          point,
+          name: "din position",
+        });
       },
       (failure) => {
         if (id !== request.current) return;
@@ -64,14 +68,22 @@ export default function NearbyPlaces({
             : "Positionen kunde inte hämtas. Försök igen eller välj ett område.",
         );
       },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+      {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 60000,
+      },
     );
   }
   function chooseArea(area) {
     request.current++;
     setBusy(false);
     setStatus("");
-    setOrigin({ ...area, name: `${area.name}s områdesmitt` });
+    setOrigin({
+      ...area,
+      name: area.name,
+      area: true,
+    });
   }
   const recommendations =
     origin && !pending && !error
@@ -86,61 +98,74 @@ export default function NearbyPlaces({
       : [];
   return (
     <div className="nearby-content">
-      <p className="nearby-intro">Hitta en solig paus på gångavstånd.</p>
+      <p className="nearby-intro">{t("Hitta en solig paus på gångavstånd.")}</p>
       <button className="primary wide" onClick={locate} disabled={busy}>
         <MapPin size={18} />
-        {busy ? "Hämtar position…" : "Använd min position & tid nu"}
+        {busy ? t("Hämtar position…") : t("Använd min position & tid nu")}
       </button>
       <p className="fineprint">
-        Din position används bara här i webbläsaren och sparas inte.
+        {t("Din position används bara här i webbläsaren och sparas inte.")}
       </p>
       {status && (
         <p role="status" className="point-note">
-          {status}
+          {t(status)}
         </p>
       )}
-      <div className="nearby-areas" aria-label="Välj område utan platsdelning">
+      <div
+        className="nearby-areas"
+        aria-label={t("Välj område utan platsdelning")}
+      >
         {nearbyAreas.map((area) => (
           <button
             key={area.name}
             onClick={() => chooseArea(area)}
-            aria-pressed={origin?.name === `${area.name}s områdesmitt`}
+            aria-pressed={origin?.area && origin?.name === area.name}
           >
             {area.name}
           </button>
         ))}
       </div>
       <div className="nearby-options">
-        <label htmlFor="nearby-duration">Tid att stanna</label>
+        <label htmlFor="nearby-duration">{t("Tid att stanna")}</label>
         <select
           id="nearby-duration"
           value={duration}
           onChange={(e) => setDuration(Number(e.target.value))}
         >
-          <option value={30}>30 min</option>
-          <option value={60}>1 timme</option>
-          <option value={90}>1,5 timmar</option>
+          <option value={30}>{t("30 min")}</option>
+          <option value={60}>{t("1 timme")}</option>
+          <option value={90}>{t("1,5 timmar")}</option>
         </select>
       </div>
       <p className="nearby-context">
-        {localDate(new Date(instant))} · Avfärd {clock(new Date(instant))}
-        {origin ? ` · Från ${origin.name}` : ""}
+        {localDate(new Date(instant))}
+        {t(" · Avfärd ")}
+        {clock(new Date(instant))}
+        {origin
+          ? t(" · Från {0}", [
+              origin.area
+                ? t("{0}s områdesmitt", [origin.name])
+                : t(origin.name),
+            ])
+          : ""}
       </p>
       <p className="nearby-weather">
-        Prognos:{" "}
+        {t("Prognos:")}{" "}
         {forecast
-          ? `${Math.round(forecast.temperature)}° · ${weatherText(forecast.symbol)}`
-          : "saknas för vald tid"}
-        . Byggnadssol beräknas separat från moln.
+          ? `${Math.round(forecast.temperature)}° · ${t(weatherText(forecast.symbol))}`
+          : t("saknas för vald tid")}
+        {t(". Byggnadssol beräknas separat från moln.")}
       </p>
       {origin && (
         <div className="nearby-results" aria-live="polite" aria-busy={pending}>
           {error ? (
             <p>
-              Skuggdata kunde inte laddas. Stäng och försök igen via kartan.
+              {t(
+                "Skuggdata kunde inte laddas. Stäng och försök igen via kartan.",
+              )}
             </p>
           ) : pending ? (
-            <p>Beräknar sol vid ankomst…</p>
+            <p>{t("Beräknar sol vid ankomst…")}</p>
           ) : recommendations.length ? (
             recommendations.map((item) => (
               <button
@@ -155,33 +180,38 @@ export default function NearbyPlaces({
                   <ArrowUpRight size={18} />
                 </span>
                 <span>
-                  Ca {item.walk} min promenad · {item.opening.label}
+                  {t("Ca ")}
+                  {item.walk}
+                  {t(" min promenad · ")}
+                  {t(item.opening.label)}
                 </span>
                 <span className="nearby-sun">
                   <Sun size={15} />
-                  {item.horizon ? "Minst ca" : "Ca"} {item.sunMinutes} min
-                  byggnadssol efter ankomst
+                  {item.horizon ? t("Minst ca") : t("Ca")} {item.sunMinutes}
+                  {t(" min byggnadssol efter ankomst")}
                 </span>
                 <small>
                   {item.place.category === "park"
-                    ? "Delvis sol i parken · trädskuggor saknas"
-                    : `${terraceLabel(item.place)} · ${item.pointSource === "chosen" ? "din valda punkt" : "uppskattad sittpunkt"}`}
+                    ? t("Delvis sol i parken · trädskuggor saknas")
+                    : `${t(terraceLabel(item.place))} · ${item.pointSource === "chosen" ? t("din valda punkt") : t("uppskattad sittpunkt")}`}
                 </small>
               </button>
             ))
           ) : (
             <p>
-              Inga matchande platser med {duration} min beräknad byggnadssol
-              efter ankomst inom 1,5 km. Prova en annan tid, kortare besök eller
-              andra filter.
+              {t("Inga matchande platser med ")}
+              {duration}
+              {t(
+                " min beräknad byggnadssol efter ankomst inom 1,5 km. Prova en annan tid, kortare besök eller andra filter.",
+              )}
             </p>
           )}
         </div>
       )}
       <p className="fineprint">
-        Dina kategori-, sök- och öppetfilter gäller. Gångtiden uppskattas från
-        avståndet, inte en kontrollerad gångväg. Öppettider och solläge kan
-        avvika på plats.
+        {t(
+          "Dina kategori-, sök- och öppetfilter gäller. Gångtiden uppskattas från avståndet, inte en kontrollerad gångväg. Öppettider och solläge kan avvika på plats.",
+        )}
       </p>
     </div>
   );

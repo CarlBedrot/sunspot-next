@@ -10,6 +10,7 @@ page.on("pageerror", (e) => errors.push(e.message));
 const base = process.env.SUNSPOT_URL || "http://localhost:3000";
 const event = curatedEvents[0];
 try {
+  await page.addInitScript(() => localStorage.setItem("sunspot:language", "sv"));
   await page.clock.setSystemTime(new Date("2026-09-16T12:00:00Z"));
   await page.route("**/api/events?**", (route) =>
     route.fulfill({ json: { events: [event], available: true, stale: false } }),
