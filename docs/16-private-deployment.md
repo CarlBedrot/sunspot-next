@@ -40,3 +40,11 @@ Den stabila produktionsadressen kontrollerades i autentiserad mobilvy: dagreglag
 ## Bar och Mat utan cirkulärt fokuslager — 2026-09-17
 
 Appkod `4c17c42`, produktion `dpl_H7eiYTojZY2Pq9cPdBffNFiy36Nb`, publicerad på samma privata adress. Kategorifilter och byggnadsskuggor behålls, de cirkulära utsnitten tas bort. Lint, produktionsbygge och befintlig browser-/inbjudningssvit passerade. Autentiserad mobilkontroll på produktionsadressen bekräftade noll cirkellager för både Bar och Mat, byggnadsskuggor kvar, inget horisontellt överflöde och 139 parkmarkeringar i Touchgrass. Inga sidfel; oinloggad åtkomst returnerade 302.
+
+## Svenska, danska och engelska — 2026-09-17
+
+Appkod `5397fcd`, produktion `dpl_3vpoovHxE6FNHUCZpLCT6xZPH7mi`, status READY på den stabila privata adressen. Skyddad preview `dpl_96apJzJSzNK2Jd9QBvcudQuubdtG` verifierades före promotion. Vercel skapade även denna gång ett nytt produktionsbygge.
+
+58 tester, lint och produktionsbygge passerade. Samtliga sex browserkontroller (browser, solar, events, map, nearby, i18n) passerade lokalt; ett första soltest fick timeout vid kartinläsning, omkörningen passerade. Språkprovet passerade även på preview och den stabila produktionsadressen: engelska/danska/svenska, sparat val, bevarad dag/tid/kategori, platskort, områdesval och liten mobilvy. Inga sidfel. Karttestet registrerade 0 långa huvudtrådsuppgifter och identisk skuggbild mellan worker och fallback. Fysisk iPhone är inte verifierad.
+
+Oinloggad startsida och väder-API returnerar fortsatt 302, och projektets skydd är kvar på `all`. Ingen delningslänk eller väninbjudan har skapats. [Guide för språk, tre testare och platskort](19-languages-and-sharing.md).
