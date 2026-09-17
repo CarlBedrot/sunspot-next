@@ -1,6 +1,6 @@
 # Privat mobilversion på Vercel
 
-Publiceringsdatum: 2026-09-16. Projekt: `sunspot-private`, konto/team `calletennis-7918s-projects`. Appkod: `be4f6f6`, Next.js 16.3.5, Node 24.x.
+Första publicering: 2026-09-16. Projekt: `sunspot-private`, konto/team `calletennis-7918s-projects`. Appkod: `be4f6f6`, Next.js 16.3.5, Node 24.x.
 
 Adress: https://sunspot-private.vercel.app/
 
@@ -23,3 +23,7 @@ Vercel-bygget passerade. Den riktiga eventkällan returnerade 54 event för test
 Ingen separat kontinuerlig övervakning eller loggexport har konfigurerats. Vercels standardloggar är tillgängliga för projektägaren.
 
 Källa för åtkomstskydd: [Vercel Authentication](https://vercel.com/docs/deployment-protection/methods-to-protect-deployments/vercel-authentication).
+
+## Uppdatering 2026-09-17
+
+Kartan har nu markörgrupper, mindre mobilkontroller och skuggritning i bakgrunden. Appkod `ffdca50`. En skyddad preview verifierades med `test:map`; Vercel skapade därefter ett nytt produktionsbygge vid promotion. Produktion `dpl_Eu1E68aRtjKYAaivpDUrAUexe7bw` har status READY och den stabila adressen är fortfarande https://sunspot-private.vercel.app/. Åtkomstskyddet är kvar på `all`. [Ändringar och mätningar](17-map-performance.md).

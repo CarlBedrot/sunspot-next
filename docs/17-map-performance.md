@@ -19,3 +19,7 @@ Den separata sidhuvudraden döljs på kartvyn; Mina träffar nås i filterpanele
 47 enhetstester omfattar tidigare sol-/event-/API-funktioner samt markörgruppernas fullständighet, vald plats, separata event, stabil identitet och projektion. `test:map` testar gruppering och zoom, sökning efter Fælledparken, mobilverktyg, fallbackens skuggtäckning, senaste tidsbild, nattläge och liten skärm. Browser-, sol- och eventsviter verifierar övriga flöden.
 
 Ett lokalt Chromium-test vid 390×844 minskade markörernas DOM-antal från 153 till 19 i startvyn. Samma 45-stegs dragsekvens på utvecklingsservern registrerade tidigare 46 långa huvudtrådsuppgifter (sammanlagt cirka 5,8 sekunder); efter ändringen registrerades 0. Det separata `test:map` registrerar mätvärden i `artifacts/map-performance.json` utan en maskinberoende tidsgräns. Detta är laboratoriemätningar på utvecklingsdatorn, inte ett löfte om bildfrekvens på en fysisk iPhone. GPU-/canvasfärgavrundning kan skilja mellan renderingsvägarna; testet jämför skuggornas alfa/täckning med en liten antialiasing-tolerans.
+
+## Hostad kontroll
+
+Commit `ffdca50` byggdes och testades först som skyddad Vercel-preview. `test:map` passerade även där: 19 markörer, 0 långa huvudtrådsuppgifter i dragsekvensen och identisk alfakanal i worker-/reservritningen. Browser-, sol- och eventsviterna passerade lokalt; produktionsbygget och lint passerade. Ingen fysisk iPhone ingick i dessa automatiska tester.
