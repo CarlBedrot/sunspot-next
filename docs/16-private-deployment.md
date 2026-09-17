@@ -35,3 +35,8 @@ Appkod `7cefe2c` är publicerad på den stabila privata adressen. Produktion `dp
 53 tester, lint och produktionsbygge passerade. Alla fem browserkontroller (browser, solar, events, map, nearby) passerade lokalt. Nearby-flödet passerade även på Vercel-preview med Chromium-geolocation, uttrycklig användaraktivering, simulerad nekad åtkomst, områdesval, datumbyte, källinformation och liten skärm. Karttestets 45-stegs dragsekvens registrerade 0 långa huvudtrådsuppgifter.
 
 Den stabila produktionsadressen kontrollerades i autentiserad mobilvy: dagreglage 00:00–23:59, worker-rendering, 19 markörer vid testtillfället, tre förslag från Nørrebros områdesmitt, inga sidfel och inget horisontellt överflöde. Oinloggad startsida och väder-API returnerade 302. Projektets skydd för all åtkomst är kvar. Fysisk iPhone, verkliga GPS-mätningar och sittpunkter i fält är fortfarande inte verifierade.
+
+
+## Bar och Mat utan cirkulärt fokuslager — 2026-09-17
+
+Appkod `4c17c42`, produktion `dpl_H7eiYTojZY2Pq9cPdBffNFiy36Nb`, publicerad på samma privata adress. Kategorifilter och byggnadsskuggor behålls, de cirkulära utsnitten tas bort. Lint, produktionsbygge och befintlig browser-/inbjudningssvit passerade. Autentiserad mobilkontroll på produktionsadressen bekräftade noll cirkellager för både Bar och Mat, byggnadsskuggor kvar, inget horisontellt överflöde och 139 parkmarkeringar i Touchgrass. Inga sidfel; oinloggad åtkomst returnerade 302.
