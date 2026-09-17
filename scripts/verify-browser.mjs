@@ -55,7 +55,7 @@ try {
     ["Mat", "restaurant"],
   ]) {
     await page.getByRole("button", { name: label, exact: true }).click();
-    await expect(page.locator(".venue-focus-veil")).toHaveCount(1);
+    await expect(page.locator(".venue-focus-veil")).toHaveCount(0);
     await page
       .getByRole("button", { name: "Visa platslista", exact: true })
       .click();

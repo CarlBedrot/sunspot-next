@@ -8,7 +8,7 @@ import { atHour } from "./lib.js";
 import * as SunCalc from "suncalc";
 import BuildingShadowLayer from "./BuildingShadowLayer.js";
 import { parkFocusLayer, fitParkView } from "./ParkFocusLayer.js";
-import { venueFocusLayer, fitPlacesView } from "./VenueFocusLayer.js";
+import { fitPlacesView } from "./VenueFocusLayer.js";
 import { places as allPlaces } from "./places.js";
 
 export default function MapView({
@@ -252,13 +252,6 @@ export default function MapView({
       m.off("resize", fit);
     };
   }, [touchgrass]);
-  useEffect(() => {
-    if (!venueFocus || editing || !map.current) return;
-    const focus = venueFocusLayer(map.current, places, results).addTo(
-      map.current,
-    );
-    return () => focus.remove();
-  }, [venueFocus, editing, places, results]);
   useEffect(() => {
     if (!venueFocus || !map.current) return;
     const m = map.current;
