@@ -27,3 +27,11 @@ Källa för åtkomstskydd: [Vercel Authentication](https://vercel.com/docs/deplo
 ## Uppdatering 2026-09-17
 
 Kartan har nu markörgrupper, mindre mobilkontroller och skuggritning i bakgrunden. Appkod `ffdca50`. En skyddad preview verifierades med `test:map`; Vercel skapade därefter ett nytt produktionsbygge vid promotion. Produktion `dpl_Eu1E68aRtjKYAaivpDUrAUexe7bw` har status READY och den stabila adressen är fortfarande https://sunspot-private.vercel.app/. Åtkomstskyddet är kvar på `all`. [Ändringar och mätningar](17-map-performance.md).
+
+## Sol nära mig och dagreglage — 2026-09-17
+
+Appkod `7cefe2c` är publicerad på den stabila privata adressen. Produktion `dpl_5Gd5cxSTe8mApgVby4SHYkBG2uGX` har status READY efter skyddad preview `dpl_F1hthnswkmpZMKD1z51eWMkbw72B`. [Beteende och källunderlag](18-nearby-and-trust.md).
+
+53 tester, lint och produktionsbygge passerade. Alla fem browserkontroller (browser, solar, events, map, nearby) passerade lokalt. Nearby-flödet passerade även på Vercel-preview med Chromium-geolocation, uttrycklig användaraktivering, simulerad nekad åtkomst, områdesval, datumbyte, källinformation och liten skärm. Karttestets 45-stegs dragsekvens registrerade 0 långa huvudtrådsuppgifter.
+
+Den stabila produktionsadressen kontrollerades i autentiserad mobilvy: dagreglage 00:00–23:59, worker-rendering, 19 markörer vid testtillfället, tre förslag från Nørrebros områdesmitt, inga sidfel och inget horisontellt överflöde. Oinloggad startsida och väder-API returnerade 302. Projektets skydd för all åtkomst är kvar. Fysisk iPhone, verkliga GPS-mätningar och sittpunkter i fält är fortfarande inte verifierade.
