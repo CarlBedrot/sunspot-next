@@ -1,7 +1,6 @@
-import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
   SlidersHorizontal,
@@ -24,6 +23,12 @@ import {
   Wind,
   X,
 } from "lucide-react";
+import NearbyPlaces from "./NearbyPlaces.jsx";
+import {
+  venueEvidence,
+  terraceLabel,
+  evidenceReviewedAt,
+} from "./venueEvidence.js";
 import MapView from "./MapView.jsx";
 import EventDetails from "./EventDetails.jsx";
 import Invite from "./Invite.jsx";
@@ -226,9 +231,10 @@ function CreateForm({ place, date, hour, duration, onClose }) {
 }
 
 export default function App() {
-  const [days] = useState(dayOptions);
-  const [demoEvents] = useState(() =>
-    createDemoEvents(days.map((day) => day.value)),
+  const [days, setDays] = useState(dayOptions);
+  const demoEvents = useMemo(
+    () => createDemoEvents(days.map((day) => day.value)),
+    [days],
   );
   const [showDemoEvents, setShowDemoEvents] = useState(() =>
     saved("demo-events", false),
@@ -247,8 +253,11 @@ export default function App() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [watchOpen, setWatchOpen] = useState(false);
-  const [date, setDate] = useState(days[1].value),
-    [hour, setHour] = useState(16),
+  const [date, setDate] = useState(days[0].value),
+    [hour, setHour] = useState(() => {
+      const [h, m] = clock(new Date()).split(":").map(Number);
+      return h + m / 60;
+    }),
     [duration, setDuration] = useState(90);
   const [category, setCategory] = useState("all"),
     [query, setQuery] = useState(""),
@@ -310,7 +319,7 @@ export default function App() {
     Number(onlyOpen);
   const [editing, setEditing] = useState(false),
     [watchId, setWatchId] = useState(null),
-    [live, setLive] = useState(false);
+    [live, setLive] = useState(true);
   const [overrides, setOverrides] = useState(() => {
     const value = saved("seats:v1") || {};
     return Object.fromEntries(
@@ -327,35 +336,34 @@ export default function App() {
       ),
     );
   });
+  const syncNow = useCallback(() => {
+    const now = new Date();
+    const today = localDate(now);
+    setDays((previous) =>
+      previous[0].value === today ? previous : dayOptions(),
+    );
+    setDate(today);
+    const [h, m] = clock(now).split(":").map(Number);
+    setHour(h + m / 60);
+  }, []);
+  const goNow = useCallback(() => {
+    syncNow();
+    setLive(true);
+  }, [syncNow]);
   useEffect(() => {
     if (!live) return;
-    const tick = () => {
-      const now = new Date();
-      setDate(localDate(now));
-      setHour(
-        Number(formatInTimeZone(now, "Europe/Copenhagen", "H")) +
-          Number(formatInTimeZone(now, "Europe/Copenhagen", "m")) / 60,
-      );
-    };
-    tick();
-    const timer = setInterval(tick, 15000);
+    const timer = setInterval(syncNow, 15000);
     const visible = () => {
-      if (document.visibilityState === "visible") tick();
+      if (document.visibilityState === "visible") syncNow();
     };
     document.addEventListener("visibilitychange", visible);
     return () => {
       clearInterval(timer);
       document.removeEventListener("visibilitychange", visible);
     };
-  }, [live]);
-  const timelineMinute =
-    Math.max(
-      0,
-      days.findIndex((day) => day.value === date),
-    ) *
-      1440 +
-    Math.round(hour * 60);
-  const timelineMax = days.length * 1440 - 5;
+  }, [live, syncNow]);
+  const timelineMinute = Math.round(hour * 60);
+  const timelineMax = 1439;
   const instant = atHour(date, hour).toISOString();
   const solar = useSolarModel(instant, overrides, duration, !inviteId);
   const results = solar.results;
@@ -611,9 +619,49 @@ export default function App() {
                       </span>
                     </div>
                   </div>
+                  <div className="place-confidence">
+                    <p>
+                      {selected.category === "park"
+                        ? "Delvis sol · trädskuggor ingår inte"
+                        : terraceLabel(selected)}
+                    </p>
+                    {selected.category !== "park" && (
+                      <p>
+                        {result?.pointSource === "chosen"
+                          ? "Din valda punkt"
+                          : "Uppskattad sittpunkt"}{" "}
+                        · inte fältverifierad
+                      </p>
+                    )}
+                    <p>
+                      Prognos:{" "}
+                      {forecast
+                        ? `${Math.round(forecast.temperature)}° · ${weatherText(forecast.symbol)}`
+                        : "saknas"}{" "}
+                      · separat från byggnadssol
+                    </p>
+                  </div>
                   <details className="place-more">
                     <summary>Mer om platsen</summary>
                     <p className="detail-description">{selected.description}</p>
+                    {venueEvidence[selected.id] && (
+                      <p className="point-note">
+                        {venueEvidence[selected.id].note}{" "}
+                        {venueEvidence[selected.id].url && (
+                          <a
+                            href={venueEvidence[selected.id].url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Källa:{" "}
+                            {venueEvidence[selected.id].sourceName ||
+                              "ställets webbplats"}
+                          </a>
+                        )}{" "}
+                        · Underlag granskat {evidenceReviewedAt}. Sittplatsens
+                        läge är inte verifierat.
+                      </p>
+                    )}
                     <p className="point-note">
                       {selected.category === "park"
                         ? result?.state === "unknown"
@@ -664,7 +712,7 @@ export default function App() {
                       >
                         <MapPin size={14} /> Visa platskälla
                       </a>
-                      <span title={selected.openingHours || undefined}>
+                      <span title={result?.opening.raw || undefined}>
                         {result?.opening.label || "Öppettider okända"}
                       </span>
                     </div>
@@ -697,6 +745,14 @@ export default function App() {
               />
             )}
 
+            {!detailOpen && !activeEvent && !watchId && (
+              <button
+                className="nearby-launch"
+                onClick={() => setModal("nearby")}
+              >
+                <MapPin size={18} /> Sol nära mig
+              </button>
+            )}
             <section className="time-dock controls" aria-label="Dag och tid">
               <div className="days">
                 {days.map((d) => (
@@ -715,7 +771,14 @@ export default function App() {
                 ))}
               </div>
               <div className="time-label">
-                <label htmlFor="time">Dra genom veckan</label>
+                <label htmlFor="time">Tid på dagen</label>
+                <button
+                  className="now-button"
+                  aria-pressed={live}
+                  onClick={goNow}
+                >
+                  Nu
+                </button>
                 <input
                   className="exact-time"
                   type="time"
@@ -735,24 +798,23 @@ export default function App() {
                 type="range"
                 min="0"
                 max={timelineMax}
-                step="5"
+                step="1"
                 value={timelineMinute}
-                aria-label="Dag och tid"
+                aria-label="Tid på dagen"
                 aria-valuetext={`${days.find((day) => day.value === date)?.day} ${clock(atHour(date, hour))}`}
                 onChange={(e) => {
                   setLive(false);
                   const minute = Number(e.target.value);
-                  setDate(days[Math.floor(minute / 1440)].value);
-                  setHour((minute % 1440) / 60);
+                  setHour(minute / 60);
                 }}
                 style={{
                   "--progress": `${(timelineMinute / timelineMax) * 100}%`,
                 }}
               />
               <div className="range-labels">
-                <span>{days[0].label} 00:00</span>
-                <span>7 dagar</span>
-                <span>{days.at(-1).day} 23:55</span>
+                <span>00:00</span>
+                <span>12:00</span>
+                <span>23:59</span>
               </div>
               <div className="timeline-status">
                 <button
@@ -806,7 +868,7 @@ export default function App() {
                 pending={solar.pending}
                 onStop={() => setWatchId(null)}
                 onSelect={selectPlace}
-                onLive={() => setLive(true)}
+                onLive={goNow}
               />
             </div>
           )}
@@ -828,7 +890,7 @@ export default function App() {
                       checked={onlyOpen}
                       onChange={(e) => setOnlyOpen(e.target.checked)}
                     />
-                    Bara bekräftat öppet enligt OSM
+                    Bara öppet enligt tillgängliga tider
                   </label>
                   <label>
                     <input
@@ -844,7 +906,7 @@ export default function App() {
                   <button
                     className="text-button"
                     aria-pressed={live}
-                    onClick={() => setLive((v) => !v)}
+                    onClick={() => (live ? setLive(false) : goNow())}
                   >
                     {live ? "● Följer klockan · pausa" : "Följ klockan nu"}
                   </button>
@@ -1000,6 +1062,21 @@ export default function App() {
                 )}
             </Modal>
           )}
+          {modal === "nearby" && (
+            <Modal title="Sol nära mig" onClose={() => setModal(null)}>
+              <NearbyPlaces
+                places={matching}
+                results={results}
+                instant={instant}
+                pending={solar.pending}
+                error={solar.error}
+                forecast={forecast}
+                onlyOpen={onlyOpen}
+                onNow={goNow}
+                onSelect={selectPlace}
+              />
+            </Modal>
+          )}
           {modal === "weather" && (
             <Modal title="Väder för vald tid" onClose={() => setModal(null)}>
               <div className="weather-card">
@@ -1093,9 +1170,9 @@ export default function App() {
             <p>
               Kort och karta använder samma byggnadsmodell. Barer bedöms vid en
               uppskattad eller självvald utomhuspunkt. Parker provtas över ytan
-              och behålls vid delvis sol. Öppettider kommer från OSM; okända
-              eller ej tolkbara tider anges som okända. Modellen är inte
-              fältverifierad.
+              och behålls vid delvis sol. Öppettider kommer från OSM och
+              daterade kontroller av ställenas egna webbplatser; okända eller ej
+              tolkbara tider anges som okända. Modellen är inte fältverifierad.
             </p>
             <h3>Träffar fungerar lokalt</h3>
             <p>

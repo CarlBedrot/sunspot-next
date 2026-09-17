@@ -40,6 +40,7 @@ npm run test:browser     # requires a running app on port 3000
 npm run test:solar
 npm run test:events      # event feed, mobile details and timeline behaviour
 npm run test:map         # grouping, mobile layout, worker/fallback and responsiveness
+npm run test:nearby      # daily timeline, explicit GPS, arrival-aware suggestions and evidence
 ```
 
 For browser tests, install Chromium with `npx playwright install chromium`, or set `SUNSPOT_BROWSER_PATH` to an existing Chrome executable. Override the app URL with `SUNSPOT_URL=http://localhost:4174`. Tests create and cancel their own local invitations.
@@ -58,9 +59,13 @@ Use `npm run build && npm start` on a Node server with writable **persistent sto
 
 **Invitations are not ready for Vercel deployment.** The Vercel runtime explicitly returns a useful 503 response for invitation APIs rather than storing them in a temporary filesystem. Map, solar analysis, events and forecasts do not require invitation storage. A shared database and distributed rate limiter are the next deployment work; the private Vercel test deployment does not provision a shared database.
 
+## Nearby and daily planning
+
+The map opens at the current Copenhagen time. Choose a day, then slide within that day; Nu returns to live time. Sol nära mig requests location only after an explicit tap, or uses a clearly labelled area centre. Up to three suggestions account for estimated walking time, sunlight throughout the visit and opening status. GPS stays in browser memory. [Behaviour, 20-place Nørrebro review and limitations](docs/18-nearby-and-trust.md).
+
 ## Accuracy and sources
 
-Building heights are often estimated, and trees, terrain and detailed roof shapes are absent. Sunny means possible direct building-unobstructed sunlight, not a cloud-free weather guarantee. Outside the building extract, or at very low sun angles, the model reports unknown. OSM hours and seating areas are approximate snapshots, not verified business availability.
+Building heights are often estimated, and trees, terrain and detailed roof shapes are absent. Sunny means possible direct building-unobstructed sunlight, not a cloud-free weather guarantee. Outside the building extract, or at very low sun angles, the model reports unknown. OSM hours and seating areas are approximate snapshots, not verified business availability. Seven Nørrebro venues use dated first-party opening-hour reviews, expiring after 90 days. All seating points remain estimated or user-chosen; source-confirmed outdoor seating does not verify exact coordinates.
 
 - [OpenStreetMap contributors](https://www.openstreetmap.org/copyright): buildings, parks, places and benches, under ODbL. [Data provenance](data/README.md).
 - [MET Norway Locationforecast](https://api.met.no/weatherapi/locationforecast/2.0/documentation): forecasts in the main map.

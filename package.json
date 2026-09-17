@@ -16,7 +16,8 @@
     "data:venues": "node scripts/build-venue-data.mjs",
     "test:events": "node scripts/verify-events.mjs",
     "data:event-locations": "node scripts/import-event-locations.mjs",
-    "test:map": "node scripts/verify-map-performance.mjs"
+    "test:map": "node scripts/verify-map-performance.mjs",
+    "test:nearby": "node scripts/verify-nearby.mjs"
   },
   "dependencies": {
     "@turf/turf": "^7.4.0",
