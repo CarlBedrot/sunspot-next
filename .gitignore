@@ -45,3 +45,7 @@ pnpm-debug.log*
 
 # Testing
 coverage/
+
+# Local application state and screenshots
+.data/
+artifacts/

@@ -1,11 +1,5 @@
-'use client'
-
-import dynamic from 'next/dynamic'
-
-const SunspotMap = dynamic(() => import('@/components/SunspotMap').then((m) => m.SunspotMap), {
-  ssr: false,
-})
+import Explore from "@/components/Explore";
 
 export default function Home() {
-  return <SunspotMap />
+  return <Explore />;
 }
