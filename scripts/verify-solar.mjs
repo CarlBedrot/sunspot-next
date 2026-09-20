@@ -36,7 +36,9 @@ try {
   await page.addInitScript(() =>
     localStorage.setItem("sunspot:demo-events", "true"),
   );
-  await page.addInitScript(() => localStorage.setItem("sunspot:language", "sv"));
+  await page.addInitScript(() =>
+    localStorage.setItem("sunspot:language", "sv"),
+  );
   await page.clock.setSystemTime(new Date("2026-09-16T12:00:00Z"));
   await page.addInitScript(() => {
     window.testNotifications = [];
@@ -54,6 +56,13 @@ try {
     waitUntil: "domcontentloaded",
   });
   await ready();
+  await filter(async () => {
+    const toggle = page.getByRole("checkbox", {
+      name: "Dölj skugga och stängda platser",
+    });
+    await expect(toggle).not.toBeChecked();
+    await toggle.check();
+  });
   await page.locator(".days button").nth(1).click();
   await time(16);
   await choose("Kayak Bar");

@@ -3224,3 +3224,404 @@ textarea {
     display: none;
   }
 }
+
+/* Lightweight, standalone hangout pages. The map is never loaded here. */
+.hang-page {
+  min-height: 100dvh;
+  background: var(--cream);
+  padding: 24px 20px max(28px, env(safe-area-inset-bottom));
+}
+.hang-header {
+  max-width: 480px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.hang-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font:
+    800 23px "Manrope",
+    sans-serif;
+  letter-spacing: -1.2px;
+}
+.hang-brand svg {
+  fill: var(--yellow);
+}
+.hang-brand span {
+  font-size: 10px;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+.hang-header .language-select {
+  font-size: 0;
+  gap: 0;
+}
+.hang-header .language-select select {
+  font-size: 12px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 8px;
+}
+.hang-card {
+  max-width: 480px;
+  margin: auto;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--blue) 20%, white);
+  border-radius: 30px;
+  padding: 24px;
+  box-shadow: 0 8px 0 color-mix(in srgb, var(--yellow) 65%, transparent);
+  overflow-wrap: anywhere;
+}
+.hang-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 650;
+}
+.hang-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hang-status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--grass);
+}
+.is-ended .hang-status i {
+  background: var(--blue);
+}
+.hang-city {
+  color: var(--muted);
+}
+.hang-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 38% 62% 58% 42%;
+  background: var(--cream);
+  font-size: 57px;
+  margin: 26px auto 24px;
+  transform: rotate(-6deg);
+}
+.hang-spark {
+  position: absolute;
+  font-size: 35px;
+  right: -17px;
+  top: 2px;
+  color: var(--blue);
+}
+.hang-eyebrow {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 550;
+}
+.hang-card h1 {
+  font:
+    800 clamp(32px, 9vw, 44px)/1.12 "Manrope",
+    sans-serif;
+  letter-spacing: -1.7px;
+  margin: 6px 0 12px;
+}
+.hang-title-dot {
+  color: var(--blue);
+}
+.hang-location,
+.hang-time {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.hang-time {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 650;
+  margin: 17px 0 20px;
+}
+.hang-guests {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 17px 0;
+  border-top: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+.hang-guests p {
+  font-size: 12px;
+  line-height: 1.5;
+  max-height: 100px;
+  overflow: auto;
+}
+.hang-avatars {
+  display: flex;
+  flex-shrink: 0;
+  padding-left: 5px;
+}
+.hang-avatars span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--sky);
+  border: 2px solid white;
+  margin-left: -5px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.hang-avatars span:nth-child(2n) {
+  background: var(--grass);
+}
+.hang-main-action,
+.hang-directions {
+  min-height: 52px;
+  border-radius: 16px !important;
+  justify-content: center !important;
+  gap: 10px;
+}
+.hang-directions {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  background: var(--surface-soft) !important;
+  border: 0 !important;
+  font-size: 14px;
+}
+.hang-joined {
+  text-align: center;
+  padding: 12px 0;
+  background: color-mix(in srgb, var(--grass) 22%, white);
+  border-radius: 16px;
+}
+.hang-joined p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 650;
+  font-size: 14px;
+}
+.hang-joined .text-button {
+  font-size: 12px;
+  margin-top: 8px;
+}
+.hang-muted {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.hang-footer {
+  max-width: 420px;
+  margin: 28px auto 0;
+  text-align: center;
+  color: var(--muted);
+}
+.hang-footer p {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.hang-footer small {
+  display: block;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.hang-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  margin-top: 15px;
+  font-weight: 650;
+}
+.hang-host-controls {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.hang-host-controls summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 650;
+  list-style: none;
+  min-height: 28px;
+}
+.hang-host-controls p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 12px 0;
+}
+.hang-host-controls button {
+  margin-top: 8px;
+  font-size: 13px;
+}
+.hang-host-controls .text-button {
+  min-height: 42px;
+}
+.hang-sun {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+.hang-sun small {
+  flex-basis: 100%;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.hang-error {
+  color: #913b26;
+  background: #fff0e8;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+.hang-manual {
+  width: 100%;
+  font-size: 13px;
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+}
+.hang-empty {
+  text-align: center;
+  margin-top: 12vh;
+}
+.hang-empty h1 {
+  font-size: 30px;
+  margin: 18px 0;
+}
+.hang-empty p {
+  margin: 18px 0;
+}
+.hang-create.modal {
+  width: min(460px, calc(100% - 24px));
+  padding: 24px;
+  border-radius: 26px;
+  max-height: calc(100dvh - 32px);
+}
+.hang-create .modal-top {
+  margin-bottom: 6px;
+}
+.hang-create h2 {
+  font:
+    800 27px "Manrope",
+    sans-serif;
+  letter-spacing: -1px;
+  margin: 0 0 6px;
+}
+.hang-create form {
+  display: grid;
+  gap: 19px;
+  margin-top: 24px;
+}
+.hang-create label,
+.hang-join-form label {
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 550;
+}
+.hang-create input,
+.hang-create select,
+.hang-join-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: 16px;
+}
+.hang-create fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.hang-create legend {
+  font-size: 13px;
+  font-weight: 550;
+  margin-bottom: 9px;
+  padding: 0;
+}
+.hang-activities {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.hang-activities button {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 12px 2px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 11px;
+}
+.hang-activities button span {
+  font-size: 24px;
+}
+.hang-activities button[aria-pressed="true"] {
+  background: var(--cream);
+  border-color: var(--blue);
+  box-shadow: inset 0 0 0 1px var(--blue);
+}
+.hang-privacy {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.hang-join-form {
+  display: grid;
+  gap: 12px;
+}
+@media (min-width: 700px) {
+  .hang-page {
+    padding-top: 35px;
+  }
+  .hang-card {
+    padding: 30px;
+  }
+  .hang-art {
+    margin-top: 32px;
+  }
+  .hang-header {
+    margin-bottom: 35px;
+  }
+}
+@media (max-width: 360px) {
+  .hang-page {
+    padding: 16px 12px;
+  }
+  .hang-card {
+    padding: 20px;
+  }
+  .hang-card h1 {
+    font-size: 32px;
+  }
+}

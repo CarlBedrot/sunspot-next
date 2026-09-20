@@ -24,6 +24,7 @@ import {
   Wind,
   X,
 } from "lucide-react";
+import { readHangLocal } from "./hangs.js";
 import PlaceShare from "./PlaceShare.jsx";
 import NearbyPlaces from "./NearbyPlaces.jsx";
 import {
@@ -351,7 +352,7 @@ function SunspotApp() {
       clearInterval(timer);
     };
   }, [inviteId, eventFrom, eventTo]);
-  const [onlySun, setOnlySun] = useState(true),
+  const [onlySun, setOnlySun] = useState(false),
     [onlyOpen, setOnlyOpen] = useState(false);
   const [seatError, setSeatError] = useState("");
   const [viewReset, setViewReset] = useState(0);
@@ -685,7 +686,7 @@ function SunspotApp() {
                     </div>
                   </div>
                   <PlaceShare
-                    key={`${selected.id}:${instant}:${locale}`}
+                    key={selected.id}
                     place={selected}
                     result={result}
                     instant={instant}
@@ -1304,10 +1305,10 @@ function SunspotApp() {
                 "Kort och karta använder samma byggnadsmodell. Barer bedöms vid en uppskattad eller självvald utomhuspunkt. Parker provtas över ytan och behålls vid delvis sol. Öppettider kommer från OSM och daterade kontroller av ställenas egna webbplatser; okända eller ej tolkbara tider anges som okända. Modellen är inte fältverifierad.",
               )}
             </p>
-            <h3>{t("Träffar fungerar lokalt")}</h3>
+            <h3>{t("Bjud in med en länk")}</h3>
             <p>
               {t(
-                "Inbjudningar och gästsvar sparas i den lokala versionen. Den hostade versionen behöver en gemensam databas för delade träffar. Solinformationen är en uppskattning.",
+                "Skapa ett häng från platskortet och dela länken. Dina vänner kan svara utan konto. Hänget avslutas automatiskt vid sluttiden. Solinformationen är en uppskattning.",
               )}
             </p>
             <button className="primary wide" onClick={() => setModal(null)}>
@@ -1320,6 +1321,13 @@ function SunspotApp() {
       {modal === "gatherings" && (
         <Modal title={t("Mina träffar")} onClose={() => setModal(null)}>
           <div className="my-gatherings">
+            {readHangLocal("mine", []).map((h) => (
+              <Link href={`/hang/${h.id}`} key={h.id}>
+                <Users size={20} />
+                <span>{h.name}</span>
+                <ChevronRight size={18} />
+              </Link>
+            ))}
             {saved("gatherings", []).length ? (
               saved("gatherings", []).map((g) => (
                 <Link href={`/invite/${g.id}`} key={g.id}>
@@ -1328,7 +1336,7 @@ function SunspotApp() {
                   <ChevronRight size={18} />
                 </Link>
               ))
-            ) : (
+            ) : readHangLocal("mine", []).length ? null : (
               <div className="empty-state">
                 <Users size={30} />
                 <h3>{t("Det börjar med en plats.")}</h3>

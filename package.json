@@ -19,7 +19,8 @@
     "test:map": "node scripts/verify-map-performance.mjs",
     "test:nearby": "node scripts/verify-nearby.mjs",
     "test:i18n": "node scripts/verify-i18n.mjs",
-    "test:share": "node scripts/verify-place-share.mjs"
+    "test:share": "node scripts/verify-hangs.mjs",
+    "test:hangs": "node scripts/verify-hangs.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
