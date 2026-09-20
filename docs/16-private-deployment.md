@@ -89,3 +89,13 @@ Appcommit `1df5aa0` lägger till Google-inloggning på profilen och sparar inlog
 59 enhets-/API-tester passerade, liksom lint och produktionsbygge. Mobiltestet för profiler passerade lokalt och från privat Vercel-förhandsversion till publik mottagarsida: bilder, namn, aktivitet, uppladdningsvalidering, språk och 320 px. Separata lokala sessioner verifierade kontoisolering, lagrad profil och bild på andra enheten, CSRF, OAuth/PKCE-start och utloggning. Produktionskontrollen verifierade Google-knappen, anonym kontostatus, integritetssidan, mobilrendering och bibehållet åtkomstskydd.
 
 Riktig Google-inloggning på den publika adressen nådde kontoval och Googles samtycke för namn, bild och e-post. Ägarens klick på ”Fortsätt” inväntas; Google-callbacken och sparandet efter just det verkliga samtycket är ännu inte verifierade. Inga testcookies eller syntetiska inloggningsvägar finns i produktionen.
+
+## Tydlig navigering och avslut av häng — 20 september 2026
+
+Appcommit `0af2534`. Privat produktion `dpl_YkRiMwKxNdYh5S8UiDHXZqkg2dai` och publik mottagarproduktion `dpl_GqG7344eA32fU6meTJvFY3py8WFt`, båda READY. Förhandsversionen `dpl_GLWgfPUSYH9v6avww9LGSLvhWhKu` verifierades med separat oinloggad mottagare före promotion. Vercel skapade ett nytt produktionsbygge vid promotion.
+
+Profiler och inbjudningar har tydliga tillbaka-länkar. `/hangs` visar nyligen öppnade häng i aktuell webbläsare med aktiva och tidigare häng åtskilda; den publika startsidan visar samma översikt. Avslut är synligt för värden och kräver en bekräftelse som går att avbryta. Integritetssidans språkbyte bevarar returvägen till inbjudan. [Flöde och begränsningar](24-navigation-and-hangouts.md).
+
+60 enhets-/API-tester, lint och produktionsbygge passerade. Mobiltester verifierade profil/bildflödet, återgång till inbjudan, integritetssidans returväg, historik, avbryt/Escape/bekräfta avslut och gästens avslutade vy i tre språk. Förhandsversionens värdflöde mot publik gäst passerade utan sidfel. Publik startsida och profilretur verifierades vid 320 px; publik `/api/weather` gav 404 och privat `/hangs` utan åtkomst gav 302.
+
+Samma utökade värd/gäst-test passerade därefter på den stabila produktionsadressen mot den publika mottagarsidan, utan sidfel. Testhänget avslutades efter kontrollen.
