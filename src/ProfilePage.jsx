@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Camera, Check, ChevronRight, Sun } from "lucide-react";
+import { Camera, Check, Sun } from "lucide-react";
 import { LanguageProvider, LanguageSelect, useLanguage } from "./Language.jsx";
-import { hangActivities, readHangLocal, hangDate, hangTime } from "./hangs.js";
+import { hangActivities } from "./hangs.js";
 import { readProfile, prepareProfilePhoto } from "./profile.js";
 import { useAccount } from "./Account.jsx";
+import HangNavigation from "./HangNavigation.jsx";
 import Avatar from "./Avatar.jsx";
 function Profile({ returnTo, canExplore, authError }) {
   const { t, locale } = useLanguage();
@@ -16,7 +17,6 @@ function Profile({ returnTo, canExplore, authError }) {
   const [error, setError] = useState(""),
     [saved, setSaved] = useState(false),
     [loading, setLoading] = useState(false);
-  const [mine] = useState(() => readHangLocal("mine", []));
   const fileInput = useRef(null),
     generation = useRef(0);
   useEffect(
@@ -77,15 +77,17 @@ function Profile({ returnTo, canExplore, authError }) {
   return (
     <main className="profile-page hang-page">
       <header className="profile-header">
-        <Link href={back} className="icon-button" aria-label={t("Tillbaka")}>
-          <ArrowLeft size={22} />
-        </Link>
         <span className="hang-brand">
           <Sun size={22} />
           SunSpot
         </span>
         <span className="profile-header-spacer" />
       </header>
+      <HangNavigation
+        canExplore={canExplore}
+        returnTo={returnTo !== "/" ? returnTo : undefined}
+        current="profile"
+      />
       <section className="profile-card">
         <p className="hang-eyebrow">{t("Lite mer du.")}</p>
         <h1>
@@ -286,36 +288,22 @@ function Profile({ returnTo, canExplore, authError }) {
         <LanguageSelect />
         <p className="profile-hint">{t("Språkvalet sparas direkt.")}</p>
       </section>
-      {canExplore && (
-        <section className="profile-meetups">
-          <h2>{t("Mina häng")}</h2>
-          <p className="profile-hint">
-            {t(
-              "Häng och svar hanteras fortfarande från webbläsaren där du skapade dem.",
-            )}
-          </p>
-          {mine.length ? (
-            mine.map((h) => (
-              <Link href={`/hang/${h.id}`} key={h.id}>
-                <div>
-                  <strong>{h.name}</strong>
-                  <small>
-                    {hangDate(h.endsAt, locale)} · {hangTime(h.endsAt, locale)}
-                  </small>
-                </div>
-                <ChevronRight size={18} />
-              </Link>
-            ))
-          ) : (
-            <p>{t("Ditt nästa häng börjar med en plats på kartan.")}</p>
+      <section className="profile-meetups">
+        <Link href="/hangs" className="secondary wide">
+          {t("Mina häng")} →
+        </Link>
+        <p className="profile-hint">
+          {t(
+            "Häng och svar hanteras fortfarande från webbläsaren där du skapade dem.",
           )}
-          <Link href="/" className="text-button">
-            {t("Till kartan")} →
-          </Link>
-        </section>
-      )}
+        </p>
+      </section>
       <p className="profile-local-note">
-        <Link href={`/privacy?lang=${locale}`}>{t("Din integritet")}</Link>
+        <Link
+          href={`/privacy?lang=${locale}&returnTo=${encodeURIComponent(returnTo)}`}
+        >
+          {t("Din integritet")}
+        </Link>
       </p>
       <p className="profile-local-note">
         {t(

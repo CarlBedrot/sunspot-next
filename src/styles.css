@@ -3961,3 +3961,141 @@ textarea {
   padding: 0 0 1.3rem;
   font-size: 0.85rem;
 }
+
+.hang-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 480px;
+  margin: -8px auto 18px;
+}
+.hang-navigation a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+.profile-page .hang-navigation {
+  max-width: 460px;
+}
+.hang-host-controls h2 {
+  display: flex;
+  font-size: 15px;
+  margin: 0;
+}
+.hang-host-controls .text-button {
+  color: #913b26;
+  text-decoration: underline;
+}
+.hang-close-dialog {
+  width: min(400px, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  color: var(--ink);
+  background: var(--surface);
+}
+.hang-close-dialog::backdrop {
+  background: rgba(20, 37, 55, 0.45);
+  backdrop-filter: blur(4px);
+}
+.hang-close-dialog h2 {
+  font-size: 23px;
+  margin: 0 0 12px;
+}
+.hang-close-dialog p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+.hang-close-dialog button {
+  margin-top: 10px;
+  min-height: 48px;
+}
+.hang-ended-next a {
+  margin-top: 18px;
+  text-decoration: none;
+}
+.hangs-overview {
+  padding: 26px;
+}
+.hangs-overview h1 {
+  font-size: 32px;
+  margin-bottom: 28px;
+}
+.recent-hangs h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+.recent-hangs .recent-hang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+.recent-hang div {
+  min-width: 0;
+}
+.recent-hang strong {
+  font-size: 16px;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.recent-hang small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 6px 0;
+}
+.recent-hang span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.recent-hangs > .secondary {
+  margin-top: 22px;
+  text-decoration: none;
+}
+.past-hangs {
+  margin-top: 20px;
+}
+.past-hangs summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding-top: 12px;
+  font-size: 14px;
+}
+.recent-hangs .profile-hint {
+  margin-top: 18px;
+}
+.hang-page .secondary,
+.recent-hangs > .secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 11px 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 650;
+  background: var(--surface);
+}
+.hang-page .secondary.wide {
+  width: 100%;
+}
+.hang-close-dialog .primary {
+  justify-content: center;
+}

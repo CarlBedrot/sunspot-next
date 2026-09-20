@@ -1,3 +1,4 @@
+import { profileReturn } from "@/profile.js";
 import Link from "next/link";
 const notices = {
   sv: {
@@ -92,25 +93,30 @@ export const metadata = { title: "Privacy · SunSpot" };
 export default async function Privacy({
   searchParams,
 }: {
-  searchParams: Promise<{ lang?: string }>;
+  searchParams: Promise<{ lang?: string; returnTo?: string }>;
 }) {
-  const { lang } = await searchParams;
+  const { lang, returnTo } = await searchParams;
+  const suffix = `&returnTo=${encodeURIComponent(profileReturn(returnTo))}`;
   const locale = lang === "sv" || lang === "da" ? lang : "en";
   const copy = notices[locale];
   return (
     <main className="profile-page privacy-page" lang={locale}>
       <header className="profile-header">
-        <Link href="/profile">← {copy.back}</Link>
+        <Link
+          href={`/profile?returnTo=${encodeURIComponent(profileReturn(returnTo))}`}
+        >
+          ← {copy.back}
+        </Link>
         <strong>SunSpot</strong>
       </header>
       <nav className="privacy-languages" aria-label="Language">
-        <Link href="/privacy?lang=sv" lang="sv">
+        <Link href={`/privacy?lang=sv${suffix}`} lang="sv">
           Svenska
         </Link>
-        <Link href="/privacy?lang=da" lang="da">
+        <Link href={`/privacy?lang=da${suffix}`} lang="da">
           Dansk
         </Link>
-        <Link href="/privacy?lang=en" lang="en">
+        <Link href={`/privacy?lang=en${suffix}`} lang="en">
           English
         </Link>
       </nav>

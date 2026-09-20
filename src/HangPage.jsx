@@ -1,15 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  Check,
-  Clock3,
-  MapPin,
-  Share2,
-  Sun,
-  Users,
-} from "lucide-react";
+import { ArrowUpRight, Check, Clock3, MapPin, Share2, Sun } from "lucide-react";
 import { LanguageProvider, LanguageSelect, useLanguage } from "./Language.jsx";
 import {
   hangActivities,
@@ -18,11 +10,13 @@ import {
   newHangToken,
   hangRequest,
   rememberHang,
+  rememberVisitedHang,
   hangTime,
   hangDate,
 } from "./hangs.js";
 import { rememberProfileName } from "./profile.js";
 import { useAccount } from "./Account.jsx";
+import HangNavigation from "./HangNavigation.jsx";
 import ProfileLink from "./ProfileLink.jsx";
 import Avatar from "./Avatar.jsx";
 import { placeMapsUrl } from "./placeShare.js";
@@ -49,7 +43,13 @@ function Hang({ id, canExplore }) {
       readHangLocal(`guest:${id}`) ||
       newHangToken(),
   );
+  const [closing, setClosing] = useState(false);
+  const closeDialog = useRef(null);
+  useEffect(() => {
+    if (closing) closeDialog.current?.showModal();
+  }, [closing]);
   function accept(data) {
+    rememberVisitedHang(data);
     offset.current = data.serverNow - Date.now();
     setClock(data.serverNow);
     setH(data);
@@ -169,6 +169,7 @@ function Hang({ id, canExplore }) {
           <ProfileLink returnTo={`/hang/${id}`} />
         </div>
       </header>
+      <HangNavigation canExplore={canExplore} />
       {!h || fatal ? (
         <section className="hang-card hang-empty">
           <span className="hang-art">👋</span>
@@ -222,9 +223,17 @@ function Hang({ id, canExplore }) {
                   : t("Här till {0}", [hangTime(h.endsAt, locale)])}
             </p>
             {ended ? (
-              <p className="hang-muted">
-                {t("Ingen väntar på svar här längre. Vi ses nästa gång!")}
-              </p>
+              <div className="hang-ended-next">
+                <p className="hang-muted">
+                  {t("Ingen väntar på svar här längre. Vi ses nästa gång!")}
+                </p>
+                <Link
+                  className="primary wide"
+                  href={canExplore ? "/" : "/hangs"}
+                >
+                  {t(canExplore ? "Hitta nästa häng" : "Mina häng")}
+                </Link>
+              </div>
             ) : (
               <>
                 <div className="hang-guests" aria-live="polite">
@@ -293,6 +302,14 @@ function Hang({ id, canExplore }) {
                       {t(busy ? "Sparar…" : "Jag kommer")}
                       <ArrowUpRight size={19} />
                     </button>
+                    <button
+                      type="button"
+                      className="text-button"
+                      disabled={busy}
+                      onClick={() => setJoining(false)}
+                    >
+                      {t("Avbryt")}
+                    </button>
                   </form>
                 ) : (
                   <button
@@ -349,11 +366,11 @@ function Hang({ id, canExplore }) {
               />
             )}
             {h.isHost && !ended && (
-              <details className="hang-host-controls">
-                <summary>
-                  {t("Ditt häng")}
-                  <Users size={15} />
-                </summary>
+              <section
+                className="hang-host-controls"
+                aria-label={t("Ditt häng")}
+              >
+                <h2>{t("Ditt häng")}</h2>
                 <p>{t("Du hanterar hänget i den här webbläsaren.")}</p>
                 <button
                   className="secondary wide"
@@ -372,11 +389,11 @@ function Hang({ id, canExplore }) {
                 <button
                   className="text-button"
                   disabled={busy}
-                  onClick={() => mutate("close", {})}
+                  onClick={() => setClosing(true)}
                 >
                   {t("Avsluta hänget")}
                 </button>
-              </details>
+              </section>
             )}
           </section>
           <footer className="hang-footer">
@@ -394,6 +411,46 @@ function Hang({ id, canExplore }) {
             )}
           </footer>
         </>
+      )}
+      {closing && (
+        <dialog
+          ref={closeDialog}
+          className="hang-close-dialog"
+          aria-labelledby="close-hang-title"
+          onCancel={(e) => {
+            e.preventDefault();
+            if (!busy) setClosing(false);
+          }}
+        >
+          <h2 id="close-hang-title">{t("Avsluta hänget?")}</h2>
+          <p>
+            {t(
+              "Alla med länken ser att hänget är avslutat. Det går inte att öppna igen.",
+            )}
+          </p>
+          {error && (
+            <p role="alert" className="hang-error">
+              {t(error)}
+            </p>
+          )}
+          <button
+            autoFocus
+            className="secondary wide"
+            disabled={busy}
+            onClick={() => setClosing(false)}
+          >
+            {t("Fortsätt hänga")}
+          </button>
+          <button
+            className="primary wide"
+            disabled={busy}
+            onClick={async () => {
+              if (await mutate("close", {})) setClosing(false);
+            }}
+          >
+            {t(busy ? "Avslutar…" : "Ja, avsluta hänget")}
+          </button>
+        </dialog>
       )}
     </main>
   );

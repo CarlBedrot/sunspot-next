@@ -35,6 +35,7 @@ test("profile return path stays inside app, including malformed and cross-origin
     profileReturn("/hang/" + "a".repeat(32)),
     "/hang/" + "a".repeat(32),
   );
+  assert.equal(profileReturn("/hangs"), "/hangs");
   for (const value of [
     "https://evil.example",
     "//evil.example",

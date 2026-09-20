@@ -24,7 +24,7 @@ import {
   Wind,
   X,
 } from "lucide-react";
-import { readHangLocal } from "./hangs.js";
+import RecentHangs from "./RecentHangs.jsx";
 import ProfileLink from "./ProfileLink.jsx";
 import PlaceShare from "./PlaceShare.jsx";
 import NearbyPlaces from "./NearbyPlaces.jsx";
@@ -545,7 +545,7 @@ function SunspotApp() {
           </Link>
           <button onClick={() => setModal("gatherings")}>
             <Users size={16} />
-            {t(" Mina träffar")}
+            {t("Mina häng")}
           </button>
         </nav>
         <div className="header-city">
@@ -1050,7 +1050,7 @@ function SunspotApp() {
                   onClick={() => setModal("gatherings")}
                 >
                   <Users size={16} />
-                  {t(" Mina träffar")}
+                  {t("Mina häng")}
                 </button>
                 <button
                   className="text-button"
@@ -1321,37 +1321,18 @@ function SunspotApp() {
         </Modal>
       )}
       {modal === "gatherings" && (
-        <Modal title={t("Mina träffar")} onClose={() => setModal(null)}>
+        <Modal title={t("Mina häng")} onClose={() => setModal(null)}>
           <div className="my-gatherings">
-            {readHangLocal("mine", []).map((h) => (
-              <Link href={`/hang/${h.id}`} key={h.id}>
-                <Users size={20} />
-                <span>{h.name}</span>
-                <ChevronRight size={18} />
-              </Link>
-            ))}
-            {saved("gatherings", []).length ? (
-              saved("gatherings", []).map((g) => (
-                <Link href={`/invite/${g.id}`} key={g.id}>
-                  <Users size={20} />
-                  <span>{g.name}</span>
-                  <ChevronRight size={18} />
-                </Link>
-              ))
-            ) : readHangLocal("mine", []).length ? null : (
-              <div className="empty-state">
-                <Users size={30} />
-                <h3>{t("Det börjar med en plats.")}</h3>
-                <p>
-                  {t(
-                    "Välj ett ställe på kartan och bjud in till din första träff.",
-                  )}
-                </p>
-              </div>
-            )}
-            <p className="fineprint">
-              {t("Här visas träffar som du skapat i den här webbläsaren.")}
-            </p>
+            <RecentHangs onExplore={() => setModal(null)} />
+            {saved("gatherings", []).length
+              ? saved("gatherings", []).map((g) => (
+                  <Link href={`/invite/${g.id}`} key={g.id}>
+                    <Users size={20} />
+                    <span>{g.name}</span>
+                    <ChevronRight size={18} />
+                  </Link>
+                ))
+              : null}
           </div>
         </Modal>
       )}

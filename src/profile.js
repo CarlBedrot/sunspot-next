@@ -53,7 +53,8 @@ export function rememberProfileName(name) {
   }
 }
 export function profileReturn(value) {
-  return typeof value === "string" && /^\/hang\/[a-f0-9]{32}$/.test(value)
+  return typeof value === "string" &&
+    (value === "/hangs" || /^\/hang\/[a-f0-9]{32}$/.test(value))
     ? value
     : "/";
 }

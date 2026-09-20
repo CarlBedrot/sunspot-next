@@ -56,6 +56,7 @@ export async function hangRequest(path = "", { token, body, signal } = {}) {
   return data;
 }
 export function rememberHang(h, token) {
+  rememberVisitedHang(h);
   if (!writeHangLocal(`host:${h.id}`, token)) return false;
   const current = readHangLocal("mine", []).filter(
     (item) => item.endsAt > Date.now() - 86400000 && item.id !== h.id,
@@ -68,6 +69,37 @@ export function rememberHang(h, token) {
     ),
   );
   return true;
+}
+export function readRecentHangs() {
+  const values = [
+    readHangLocal("recent", []),
+    readHangLocal("mine", []),
+  ].flatMap((v) => (Array.isArray(v) ? v : []));
+  const unique = new Map();
+  for (const h of values)
+    if (
+      h &&
+      /^[a-f0-9]{32}$/.test(h.id) &&
+      typeof h.name === "string" &&
+      Number.isFinite(h.endsAt) &&
+      h.endsAt > Date.now() - 86400000 &&
+      !unique.has(h.id)
+    )
+      unique.set(h.id, h);
+  return [...unique.values()].slice(0, 30);
+}
+export function rememberVisitedHang(h) {
+  const item = {
+    id: h.id,
+    name: h.place.name,
+    startsAt: h.startsAt,
+    endsAt: h.endsAt,
+    status: h.status,
+    isHost: h.isHost,
+    joined: h.joined,
+  };
+  const current = readRecentHangs().filter((value) => value.id !== h.id);
+  writeHangLocal("recent", [item, ...current].slice(0, 30));
 }
 export function hangTime(time, locale) {
   return new Intl.DateTimeFormat(locale, {

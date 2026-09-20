@@ -65,7 +65,7 @@ try {
     "Välj en JPG-, PNG- eller WebP-bild.",
   );
   await expect(p.locator(".profile-photo-button img")).toBeVisible();
-  await p.getByRole("link", { name: "Tillbaka", exact: true }).click();
+  await p.getByRole("link", { name: "Till kartan", exact: true }).click();
   await p.getByRole("button", { name: "Alla", exact: true }).click();
   await p.getByLabel("Sök plats eller område").fill("Kayak");
   await p.getByRole("button", { name: "Visa Kayak Bar", exact: true }).click();
@@ -105,7 +105,10 @@ try {
   await expect(g.getByRole("button", { name: "Gem profil" })).toBeEnabled();
   await g.getByRole("button", { name: "Gem profil" }).click();
   await expect(g.getByRole("status")).toBeVisible();
-  await g.getByRole("link", { name: "Tilbage", exact: true }).first().click();
+  await g
+    .getByRole("link", { name: "Tilbage til aftalen", exact: true })
+    .first()
+    .click();
   await g.getByRole("button", { name: "Jeg kommer", exact: true }).click();
   await expect(g.getByLabel("Dit fornavn")).toHaveValue("Anna Profile QA");
   await g.getByRole("button", { name: "Jeg kommer", exact: true }).click();
@@ -136,8 +139,11 @@ try {
     path: "artifacts/profile-small-en.png",
     fullPage: true,
   });
-  await p.getByText("Ditt häng", { exact: true }).click();
-  await p.getByRole("button", { name: "Avsluta hänget" }).click();
+  await p.getByRole("button", { name: "Avsluta hänget", exact: true }).click();
+  await p
+    .getByRole("dialog")
+    .getByRole("button", { name: "Ja, avsluta hänget", exact: true })
+    .click();
   await expect(
     p.getByText("Hänget är avslutat", { exact: true }),
   ).toBeVisible();

@@ -106,6 +106,9 @@ try {
   );
   await g.screenshot({ path: "artifacts/hang-guest-mobile-da.png" });
   await g.getByRole("button", { name: "Jeg kommer", exact: true }).click();
+  await g.getByRole("button", { name: "Annuller", exact: true }).click();
+  await expect(g.getByLabel("Dit fornavn")).toHaveCount(0);
+  await g.getByRole("button", { name: "Jeg kommer", exact: true }).click();
   await g.getByLabel("Dit fornavn").fill("Anna QA");
   await g.getByRole("button", { name: "Jeg kommer", exact: true }).click();
   await expect(g.getByText("Du kommer. Vi ses der!")).toBeVisible({
@@ -115,7 +118,6 @@ try {
   await expect(g.getByText("Du kommer. Vi ses der!")).toBeVisible();
   await p.reload();
   await expect(p.getByText("Anna QA kommer", { exact: true })).toBeVisible();
-  await p.getByText("Ditt häng", { exact: true }).click();
   const before = await p.locator(".hang-time").innerText();
   await p.getByRole("button", { name: "Vi stannar 30 min till" }).click();
   await expect(p.locator(".hang-time")).not.toHaveText(before, {
@@ -137,7 +139,50 @@ try {
     true,
   );
   await g.screenshot({ path: "artifacts/hang-guest-small-en.png" });
-  await p.getByRole("button", { name: "Avsluta hänget" }).click();
+  await p.getByRole("link", { name: "Min profil", exact: true }).click();
+  await expect(
+    p.getByRole("link", { name: "Till hänget", exact: true }),
+  ).toHaveAttribute("href", `/hang/${id}`);
+  await p.getByRole("link", { name: "Din integritet", exact: true }).click();
+  await p.getByRole("link", { name: "English", exact: true }).click();
+  await expect(
+    p.getByRole("link", { name: "Back to profile" }),
+  ).toHaveAttribute(
+    "href",
+    `/profile?returnTo=${encodeURIComponent(`/hang/${id}`)}`,
+  );
+  await p.getByRole("link", { name: "Back to profile" }).click();
+  await p.getByRole("link", { name: "Till hänget", exact: true }).click();
+  await p
+    .getByRole("navigation")
+    .getByRole("link", { name: "Mina häng", exact: true })
+    .click();
+  const activeRow = p.locator(".recent-hang").filter({ hasText: "Kayak Bar" });
+  await expect(activeRow).toContainText("Du är värd");
+  await p.screenshot({
+    path: "artifacts/hangs-overview-mobile.png",
+    fullPage: true,
+  });
+  await activeRow.click();
+  await p.getByRole("button", { name: "Avsluta hänget", exact: true }).click();
+  const confirm = p.getByRole("dialog", { name: "Avsluta hänget?" });
+  await expect(
+    confirm.getByRole("button", { name: "Fortsätt hänga" }),
+  ).toBeFocused();
+  await p.screenshot({ path: "artifacts/hang-end-confirm-mobile.png" });
+  await confirm.getByRole("button", { name: "Fortsätt hänga" }).click();
+  await expect(confirm).toHaveCount(0);
+  await expect(
+    p.getByRole("button", { name: "Dela med vänner" }),
+  ).toBeVisible();
+  await p.getByRole("button", { name: "Avsluta hänget", exact: true }).click();
+  await p.keyboard.press("Escape");
+  await expect(confirm).toHaveCount(0);
+  await p.getByRole("button", { name: "Avsluta hänget", exact: true }).click();
+  await p
+    .getByRole("dialog")
+    .getByRole("button", { name: "Ja, avsluta hänget", exact: true })
+    .click();
   await expect(p.getByText("Hänget är avslutat", { exact: true })).toBeVisible({
     timeout: 10000,
   });
@@ -148,6 +193,17 @@ try {
   await expect(
     g.getByRole("button", { name: "I’m coming", exact: true }),
   ).toHaveCount(0);
+  await g
+    .getByRole("navigation")
+    .getByRole("link", { name: "My hangouts", exact: true })
+    .click();
+  await expect(g.locator(".past-hangs")).toBeVisible();
+  await g.locator(".past-hangs summary").click();
+  await expect(g.locator(".past-hangs .recent-hang")).toContainText("Ended");
+  await g.locator(".past-hangs .recent-hang").click();
+  await expect(
+    g.getByText("This hangout has ended", { exact: true }),
+  ).toBeVisible();
   await g.goto(new URL(`/hang/${"f".repeat(32)}`, guestUrl).href);
   await expect(
     g.getByText("This hangout is no longer available.", { exact: true }),
