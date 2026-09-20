@@ -56,3 +56,15 @@ Appkod `4a62eae`, produktion `dpl_8GYtdSBernogYKifpj56oWpQBbBm`, status READY p�
 46 tester, lint och produktionsbygge passerade. Browserkontroller för delning, hela appen inklusive lokala inbjudningar, språk och solbevakning passerade. Det lokala inbjudningstestet kördes med localhost för att matcha serverns origin-kontroll; 127.0.0.1 gav korrekt 403. Delningssviten passerade även på skyddad preview. Kortet mäter 284 px i mobiltestet (390 × 844); CTA är åtkomlig även vid 390 × 667. Slutkontroll på produktion via befintlig delningslänk bekräftade kompakt kort, Maps-länk, gömda detaljer, väder-API 200 och inga sidfel. Oinloggad åtkomst utan delningslänk returnerar fortfarande 302. Faktisk iOS-delning återstår att verifiera på fysisk mobil.
 
 [Flöde och begränsningar](20-compact-place-sharing.md). Ändringen ligger också i den öppna pull requesten till `lveggers/sunspot`.
+
+## Spontana häng med publik mottagarsida — 2026-09-20
+
+Appkod `f67b0e4`. Privata kartappen: produktion `dpl_HwSdEURvroKFwv281n4KCp6mXkeF`, READY på samma stabila adress. Validerad preview: `dpl_A2JY6HzmkVDmKCTHpN7hkeATKrPX`. Mottagarsidan har ett separat projekt, `sunspot-hangouts`: produktion `dpl_6fMbueemMkGbzEqfyRQjgPaAaTcx`, READY på https://sunspot-hangouts.vercel.app/. Publika inbjudningar använder `/hang/[id]`; startsidan är endast en liten introduktion. Privata projektets skydd är kvar på `all`, medan mottagarprojektet är publikt och begränsat till mottagarflödet. API:t nekar skapande på mottagardomänen.
+
+Gemensam Upstash Redis har aktiverats efter användarens godkännande av villkoren. Gratisplan, region Frankfurt, automatisk uppgradering avstängd. Nya häng och svar fungerar mellan olika mobiler och försvinner ett dygn efter sluttiden. Värd- och gästbehörigheter ligger i respektive webbläsare, aldrig i delningslänken. Äldre `/invite` använder fortfarande det lokala flödet; använd den nya primära knappen på platskortet för delade häng.
+
+52 tester, lint och produktionsbygge passerade. Mobilflödet verifierades lokalt och mellan den skyddade previewn och en oinloggad webbläsare på den publika domänen: skapa, återhämta tappat serversvar utan dubblett, dela, svara, ladda om, förlänga, återkalla svar och avsluta. Svenska, danska och engelska, 320 px bredd och inga sidfel. Sol- och språkregressionerna passerade efter omstart av lokal server med det aktuella bygget. Fysisk iPhone och bakgrundspush ingår fortfarande inte i verifieringen.
+
+[Arkitektur, användarflöde och begränsningar](21-spontaneous-hangouts.md).
+
+Slutkontroll på den stabila produktionsadressen via befintlig delningslänk passerade samma värd/gäst-flöde mot den publika mottagarsidan, inklusive tappat serversvar och automatisk återhämtning. Den befintliga åtkomstlänken gav 200; privat adress utan åtkomstlänk gav 302. Testhängen avslutades efter kontrollen.
