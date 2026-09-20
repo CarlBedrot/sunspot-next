@@ -36,7 +36,6 @@ Appkod `7cefe2c` är publicerad på den stabila privata adressen. Produktion `dp
 
 Den stabila produktionsadressen kontrollerades i autentiserad mobilvy: dagreglage 00:00–23:59, worker-rendering, 19 markörer vid testtillfället, tre förslag från Nørrebros områdesmitt, inga sidfel och inget horisontellt överflöde. Oinloggad startsida och väder-API returnerade 302. Projektets skydd för all åtkomst är kvar. Fysisk iPhone, verkliga GPS-mätningar och sittpunkter i fält är fortfarande inte verifierade.
 
-
 ## Bar och Mat utan cirkulärt fokuslager — 2026-09-17
 
 Appkod `4c17c42`, produktion `dpl_H7eiYTojZY2Pq9cPdBffNFiy36Nb`, publicerad på samma privata adress. Kategorifilter och byggnadsskuggor behålls, de cirkulära utsnitten tas bort. Lint, produktionsbygge och befintlig browser-/inbjudningssvit passerade. Autentiserad mobilkontroll på produktionsadressen bekräftade noll cirkellager för både Bar och Mat, byggnadsskuggor kvar, inget horisontellt överflöde och 139 parkmarkeringar i Touchgrass. Inga sidfel; oinloggad åtkomst returnerade 302.
@@ -78,3 +77,15 @@ Profilknappen finns bredvid kartsökningen och i inbjudans sidhuvud. Namn, bild 
 55 tester, lint och produktionsbygge passerade. Mobiltestet passerade lokalt och mot Vercel: uppladdning, felaktig filtyp, lagring efter omladdning, förifyllt namn/aktivitet, värd- och gästbilder, borttagning, tre språk och 320 px bredd. Inga sidfel. Befintliga häng utan profilbild verifierades med `test:hangs`. Publik `/profile` gav 200 och orelaterad publik `/api/weather` gav fortsatt 404. Fysisk iPhone-kamera och bildväljare återstår att verifiera.
 
 Samma profiltest passerade därefter på den stabila produktionsadressen mot den publika mottagardomänen. Direktlänken till profilen med befintlig delningsåtkomst gav 200, och privat profil utan åtkomst gav 302. Testhänget avslutades efter verifieringen.
+
+## Valfri Google-inloggning, 20 september 2026
+
+Appcommit `1df5aa0` lägger till Google-inloggning på profilen och sparar inloggade namn, bilder och aktivitetsval i samma Upstash-databas. Gästflödet är fortsatt kontofritt. Google Cloud-projektet `sunspot-509215`, klienten `SunSpot Web`, är External / In production. Endast `openid email profile` begärs. Servernycklar finns som sensitive-miljövariabler i båda projekten för Production och Preview. [Teknik och begränsningar](23-google-login.md).
+
+- Privat produktion: `dpl_GaJ5vQS2W4vWzYRmYoSt5BJzKzCw`, READY, https://sunspot-private.vercel.app . Vercel-skyddet är kvar.
+- Publik mottagarsida: `dpl_8NBjXvVeQEhbUgHMUmUibPdG8C25`, READY, https://sunspot-hangouts.vercel.app . `/profile`, `/privacy`, `/api/account` och Auth.js-rutter är öppna; orelaterad `/api/weather` ger fortsatt 404.
+- Validerad förhandsversion: `dpl_9ffakS3PXky82843JciMeTWFmd9U`. Den byggdes före kompletteringen av Preview-nycklarna och visar därför Google-knappen som otillgänglig; produktionen byggdes separat med korrekta produktionsnycklar och den aktiva knappen verifierades där. Nya förhandsversioner får Preview-nycklarna men behöver en registrerad Google-returadress för att slutföra OAuth.
+
+59 enhets-/API-tester passerade, liksom lint och produktionsbygge. Mobiltestet för profiler passerade lokalt och från privat Vercel-förhandsversion till publik mottagarsida: bilder, namn, aktivitet, uppladdningsvalidering, språk och 320 px. Separata lokala sessioner verifierade kontoisolering, lagrad profil och bild på andra enheten, CSRF, OAuth/PKCE-start och utloggning. Produktionskontrollen verifierade Google-knappen, anonym kontostatus, integritetssidan, mobilrendering och bibehållet åtkomstskydd.
+
+Riktig Google-inloggning på den publika adressen nådde kontoval och Googles samtycke för namn, bild och e-post. Ägarens klick på ”Fortsätt” inväntas; Google-callbacken och sparandet efter just det verkliga samtycket är ännu inte verifierade. Inga testcookies eller syntetiska inloggningsvägar finns i produktionen.
