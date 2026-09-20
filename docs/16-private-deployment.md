@@ -68,3 +68,13 @@ Gemensam Upstash Redis har aktiverats efter användarens godkännande av villkor
 [Arkitektur, användarflöde och begränsningar](21-spontaneous-hangouts.md).
 
 Slutkontroll på den stabila produktionsadressen via befintlig delningslänk passerade samma värd/gäst-flöde mot den publika mottagarsidan, inklusive tappat serversvar och automatisk återhämtning. Den befintliga åtkomstlänken gav 200; privat adress utan åtkomstlänk gav 302. Testhängen avslutades efter kontrollen.
+
+## Profiler med namn och bild — 2026-09-20
+
+Appkod `c54b81c`. Privat produktion `dpl_3RwLiPDqBGwgRB3EW3a9ULS8V8NK` och publik mottagarproduktion `dpl_FudgZbw9YJLgkxUhkcgyS9voBXkb`, båda READY. Den privata previewn `dpl_6eihRBG59KjXX64hjuLSLFzgKBXk` verifierades mot en separat, oinloggad mottagare före promotion. Vercel skapade ett nytt produktionsbygge vid promotion.
+
+Profilknappen finns bredvid kartsökningen och i inbjudans sidhuvud. Namn, bild och favoritaktivitet sparas i den aktuella webbläsaren; språkval och egna häng finns på samma sida. Profilen synkas inte mellan enheter eller mellan den privata och publika domänen. Namn och miniatyrbild följer med nya inbjudningar och svar. Bilder i redan delade inbjudningar ändras inte automatiskt. [Profilflöde och bildhantering](22-profiles.md).
+
+55 tester, lint och produktionsbygge passerade. Mobiltestet passerade lokalt och mot Vercel: uppladdning, felaktig filtyp, lagring efter omladdning, förifyllt namn/aktivitet, värd- och gästbilder, borttagning, tre språk och 320 px bredd. Inga sidfel. Befintliga häng utan profilbild verifierades med `test:hangs`. Publik `/profile` gav 200 och orelaterad publik `/api/weather` gav fortsatt 404. Fysisk iPhone-kamera och bildväljare återstår att verifiera.
+
+Samma profiltest passerade därefter på den stabila produktionsadressen mot den publika mottagardomänen. Direktlänken till profilen med befintlig delningsåtkomst gav 200, och privat profil utan åtkomst gav 302. Testhänget avslutades efter verifieringen.
