@@ -1,3 +1,5 @@
+> Update: optional Google account profiles and their synchronization are described in [Google sign-in](23-google-login.md). The browser-local behavior below continues to apply when signed out.
+
 # Profiles without a new sign-up step
 
 Open the avatar beside map search, or in the invitation header. `/profile` lets you save your first name, choose/remove a photo, select a preferred hangout activity, change language and return to your own saved hangouts. Name, photo and activity persist in this browser; language saves immediately. Profiles do not automatically sync across devices or across the private map and public recipient origins. This limitation is visible on the page.

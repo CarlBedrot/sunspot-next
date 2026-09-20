@@ -21,7 +21,8 @@ import {
   hangTime,
   hangDate,
 } from "./hangs.js";
-import { readProfile, rememberProfileName } from "./profile.js";
+import { rememberProfileName } from "./profile.js";
+import { useAccount } from "./Account.jsx";
 import ProfileLink from "./ProfileLink.jsx";
 import Avatar from "./Avatar.jsx";
 import { placeMapsUrl } from "./placeShare.js";
@@ -32,11 +33,12 @@ function Hang({ id, canExplore }) {
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [fatal, setFatal] = useState(false);
-  const [profile] = useState(readProfile);
-  const [name, setName] = useState(() => profile.name),
+  const { profile, user, loading: accountLoading } = useAccount();
+  const [nameDraft, setName] = useState(null),
     [joining, setJoining] = useState(false),
     [feedback, setFeedback] = useState(""),
     [manual, setManual] = useState("");
+  const name = nameDraft ?? profile.name;
   const [clock, setClock] = useState(() => Date.now());
   const offset = useRef(0);
   const alive = useRef(true);
@@ -116,7 +118,7 @@ function Hang({ id, canExplore }) {
       accept(data);
       if (data.isHost) rememberHang(data, credential);
       if (action === "rsvp") {
-        rememberProfileName(name.trim());
+        if (!user) rememberProfileName(name.trim());
         setJoining(false);
       }
       return true;
@@ -284,7 +286,10 @@ function Hang({ id, canExplore }) {
                         disabled={busy}
                       />
                     </label>
-                    <button className="primary wide" disabled={busy}>
+                    <button
+                      className="primary wide"
+                      disabled={busy || accountLoading}
+                    >
                       {t(busy ? "Sparar…" : "Jag kommer")}
                       <ArrowUpRight size={19} />
                     </button>

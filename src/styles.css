@@ -3890,3 +3890,74 @@ textarea {
     gap: 12px;
   }
 }
+
+.profile-account {
+  margin: 1.35rem 0 1.7rem;
+  padding: 1.1rem;
+  border: 1px solid rgba(68, 73, 36, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.45);
+}
+.profile-account p {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0.6rem 0 0;
+}
+.profile-account .text-button {
+  margin-top: 0.6rem;
+}
+.profile-account-status {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+}
+.profile-account-email {
+  overflow-wrap: anywhere;
+}
+.google-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #747775;
+  border-radius: 999px;
+  color: #1f1f1f;
+  background: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.google-signin:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.profile-import {
+  margin: 0 0 1rem;
+  text-align: left;
+}
+.privacy-page {
+  max-width: 680px;
+}
+.privacy-page .profile-card {
+  padding: 1.5rem;
+}
+.privacy-page h1 {
+  font-size: 2rem;
+}
+.privacy-page h2 {
+  font-size: 1.15rem;
+  margin: 1.5rem 0 0.5rem;
+}
+.privacy-page p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.privacy-languages {
+  display: flex;
+  gap: 1.25rem;
+  padding: 0 0 1.3rem;
+  font-size: 0.85rem;
+}

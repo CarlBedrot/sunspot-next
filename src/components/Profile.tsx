@@ -11,6 +11,7 @@ const ProfilePage = dynamic(() => import("../ProfilePage.jsx"), {
 export default function Profile(props: {
   returnTo: string;
   canExplore: boolean;
+  authError: boolean;
 }) {
   return <ProfilePage {...props} />;
 }

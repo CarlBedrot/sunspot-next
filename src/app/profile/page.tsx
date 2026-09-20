@@ -7,12 +7,13 @@ export const metadata = {
 export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ returnTo?: string }>;
+  searchParams: Promise<{ returnTo?: string; error?: string }>;
 }) {
-  const { returnTo } = await searchParams;
+  const { returnTo, error } = await searchParams;
   return (
     <Profile
       returnTo={profileReturn(returnTo)}
+      authError={Boolean(error)}
       canExplore={process.env.SUNSPOT_RECIPIENT_ONLY !== "1"}
     />
   );

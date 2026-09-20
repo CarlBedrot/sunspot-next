@@ -40,6 +40,8 @@ export function saveProfile(profile) {
     );
   }
   writeHangLocal("name", name);
+  if (typeof window !== "undefined")
+    window.dispatchEvent(new Event("sunspot-profile"));
   return value;
 }
 export function rememberProfileName(name) {

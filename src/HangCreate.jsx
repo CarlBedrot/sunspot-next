@@ -1,4 +1,5 @@
-import { readProfile, rememberProfileName } from "./profile.js";
+import { rememberProfileName } from "./profile.js";
+import { useAccount } from "./Account.jsx";
 import Avatar from "./Avatar.jsx";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -26,22 +27,23 @@ export default function HangCreate({
   const { t, locale } = useLanguage();
   const router = useRouter();
   const dialog = useRef(null);
-  const [profile] = useState(readProfile);
+  const { profile, user, loading: accountLoading } = useAccount();
   const [draft] = useState(() => {
     const saved = readHangLocal("pending");
     return saved?.placeId === place.id ? saved : null;
   });
 
-  const [host, setHost] = useState(() => draft?.body?.host || profile.name);
-  const [activity, setActivity] = useState(
-    draft?.body?.activity ||
-      profile.activity ||
+  const [hostDraft, setHost] = useState(() => draft?.body?.host ?? null);
+  const host = hostDraft ?? profile.name;
+  const [activityDraft, setActivity] = useState(draft?.body?.activity ?? null);
+  const activity =
+    activityDraft ??
+    (profile.activity ||
       (place.category === "bar"
         ? "beer"
         : place.category === "restaurant"
           ? "food"
-          : "hang"),
-  );
+          : "hang"));
   const [duration, setDuration] = useState(draft?.body?.duration || 90);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -103,7 +105,7 @@ export default function HangCreate({
         throw Error(
           "Tillåt lokal lagring i webbläsaren för att skapa ett häng.",
         );
-      rememberProfileName(h.host);
+      if (!user) rememberProfileName(h.host);
       writeHangLocal("pending", null);
       router.push(`/hang/${h.id}`);
     } catch (err) {
@@ -198,7 +200,7 @@ export default function HangCreate({
             {t(error)}
           </p>
         )}
-        <button className="primary wide" disabled={busy}>
+        <button className="primary wide" disabled={busy || accountLoading}>
           {t(busy ? "Skapar…" : "Skapa häng")}
           <ArrowUpRight size={20} />
         </button>

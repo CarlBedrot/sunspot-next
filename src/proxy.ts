@@ -6,6 +6,9 @@ export function proxy(request: NextRequest) {
     path !== "/" &&
     path !== "/favicon.svg" &&
     path !== "/profile" &&
+    path !== "/privacy" &&
+    path !== "/api/account" &&
+    !path.startsWith("/api/auth/") &&
     !path.startsWith("/hang/") &&
     !path.startsWith("/api/hangs/") &&
     path !== "/api/hangs" &&

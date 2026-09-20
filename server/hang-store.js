@@ -2,8 +2,8 @@ import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
 // Compare-and-swap keeps concurrent RSVPs, host edits and expiry consistent.
-const cas = `local old=redis.call('GET',KEYS[1]); if (old or '')~=ARGV[1] then return 0 end; redis.call('SET',KEYS[1],ARGV[2],'PXAT',ARGV[3]); return 1`;
-export function redisHangStore(url, token) {
+const cas = `local old=redis.call('GET',KEYS[1]); if (old or '')~=ARGV[1] then return 0 end; if ARGV[3]=='0' then redis.call('SET',KEYS[1],ARGV[2]) else redis.call('SET',KEYS[1],ARGV[2],'PXAT',ARGV[3]) end; return 1`;
+export function redisHangStore(url, token, namespace = "hangs") {
   async function command(args) {
     const res = await fetch(url, {
       method: "POST",
@@ -20,7 +20,7 @@ export function redisHangStore(url, token) {
     if (body.error) throw new Error("Hang storage command failed");
     return body.result;
   }
-  const key = (id) => `sunspot:hangs:v1:${id}`;
+  const key = (id) => `sunspot:${namespace}:v1:${id}`;
   return {
     get: (id) => command(["GET", key(id)]),
     swap: async (id, old, next, expires) =>
@@ -38,7 +38,9 @@ export async function sqliteHangStore(filename = ":memory:") {
   );
   return {
     async get(id) {
-      db.prepare("DELETE FROM hang_records WHERE expires <= ?").run(Date.now());
+      db.prepare(
+        "DELETE FROM hang_records WHERE expires > 0 AND expires <= ?",
+      ).run(Date.now());
       return (
         db.prepare("SELECT value FROM hang_records WHERE id=?").get(id)
           ?.value || null
@@ -74,4 +76,25 @@ export function hangStore() {
       );
   }
   return singleton;
+}
+
+let profiles;
+export function profileStore() {
+  if (!profiles) {
+    const url =
+      process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+    const token =
+      process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+    if (!process.env.VERCEL && process.env.SUNSPOT_PROFILE_DB)
+      profiles = sqliteHangStore(process.env.SUNSPOT_PROFILE_DB);
+    else if (url && token)
+      profiles = Promise.resolve(redisHangStore(url, token, "profiles"));
+    else if (process.env.VERCEL)
+      throw new Error("Shared profile storage is not configured");
+    else
+      profiles = sqliteHangStore(
+        process.env.SUNSPOT_PROFILE_DB || ".data/profiles.sqlite",
+      );
+  }
+  return profiles;
 }

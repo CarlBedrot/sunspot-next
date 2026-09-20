@@ -4,11 +4,15 @@ import Link from "next/link";
 import { ArrowLeft, Camera, Check, ChevronRight, Sun } from "lucide-react";
 import { LanguageProvider, LanguageSelect, useLanguage } from "./Language.jsx";
 import { hangActivities, readHangLocal, hangDate, hangTime } from "./hangs.js";
-import { readProfile, saveProfile, prepareProfilePhoto } from "./profile.js";
+import { readProfile, prepareProfilePhoto } from "./profile.js";
+import { useAccount } from "./Account.jsx";
 import Avatar from "./Avatar.jsx";
-function Profile({ returnTo, canExplore }) {
+function Profile({ returnTo, canExplore, authError }) {
   const { t, locale } = useLanguage();
-  const [profile, setProfile] = useState(readProfile);
+  const account = useAccount();
+  const [profile, setProfile] = useState(() => account.profile);
+  const [authBusy, setAuthBusy] = useState(false);
+  const [localProfile] = useState(readProfile);
   const [error, setError] = useState(""),
     [saved, setSaved] = useState(false),
     [loading, setLoading] = useState(false);
@@ -44,14 +48,30 @@ function Profile({ returnTo, canExplore }) {
       if (version === generation.current) setLoading(false);
     }
   }
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     try {
-      setProfile(saveProfile(profile));
+      setLoading(true);
+      setProfile(await account.save(profile));
       setSaved(true);
       setError("");
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function authenticate(logout = false) {
+    setAuthBusy(true);
+    setError("");
+    try {
+      const { signIn, signOut } = await import("next-auth/react");
+      const redirectTo = `/profile${returnTo === "/" ? "" : `?returnTo=${encodeURIComponent(returnTo)}`}`;
+      if (logout) await signOut({ redirectTo });
+      else await signIn("google", { redirectTo });
+    } catch {
+      setError("Inloggningen avbröts. Försök igen eller fortsätt utan konto.");
+      setAuthBusy(false);
     }
   }
   return (
@@ -72,6 +92,80 @@ function Profile({ returnTo, canExplore }) {
           {t("Min profil")}
           <span>.</span>
         </h1>
+        <section className="profile-account" aria-label={t("Ditt konto")}>
+          {account.user ? (
+            <>
+              <div className="profile-account-status">
+                <Check size={16} />
+                <strong>{t("Inloggad med Google")}</strong>
+              </div>
+              <p className="profile-account-email">{account.user.email}</p>
+              <p>
+                {t(
+                  "Namn, bild och profilval följer med när du loggar in på en annan enhet.",
+                )}
+              </p>
+              <button
+                type="button"
+                className="text-button"
+                disabled={authBusy || loading}
+                onClick={() => authenticate(true)}
+              >
+                {t("Logga ut")}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="google-signin"
+                disabled={!account.enabled || authBusy || loading}
+                onClick={() => authenticate()}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 48 48"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="#4285F4"
+                    d="M43.61 20.46H24v7.86h11.3c-.49 2.53-1.98 4.67-4.22 6.11v5.1h6.83c4-3.69 6.31-9.11 6.31-15.53 0-1.18-.1-2.39-.31-3.54Z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M24 44c5.4 0 9.92-1.78 13.23-4.47l-6.83-5.1c-1.83 1.22-4.18 1.95-6.4 1.95-5.19 0-9.59-3.5-11.17-8.22H5.79v5.27C9.18 40.19 16.04 44 24 44Z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M12.83 28.16a12.03 12.03 0 0 1 0-8.32v-5.27H5.79a20 20 0 0 0 0 18.86l7.04-5.27Z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M24 11.62c2.96 0 5.62 1.02 7.72 3.02l5.79-5.8C34.09 5.65 29.4 4 24 4 16.04 4 9.18 7.81 5.79 14.57l7.04 5.27C14.41 15.12 18.81 11.62 24 11.62Z"
+                  />
+                </svg>
+                {t(authBusy ? "Öppnar Google…" : "Fortsätt med Google")}
+              </button>
+              <p>
+                {t(
+                  account.enabled
+                    ? "Helt frivilligt. Spara din profil mellan enheter – eller fortsätt utan konto."
+                    : "Google-inloggning aktiveras snart.",
+                )}
+              </p>
+            </>
+          )}
+          {(authError || account.error) && (
+            <p className="hang-error" role="alert">
+              {t(
+                account.error
+                  ? "Profilen kunde inte hämtas. Försök igen."
+                  : "Inloggningen avbröts. Försök igen eller fortsätt utan konto.",
+              )}
+            </p>
+          )}
+        </section>
         <form onSubmit={submit}>
           <div className="profile-photo-editor">
             <button
@@ -156,9 +250,21 @@ function Profile({ returnTo, canExplore }) {
           </fieldset>
           <p className="profile-privacy">
             {t(
-              "Din profil sparas i den här webbläsaren. Namn och bild visas för alla med länken när du skapar ett häng eller svarar. Ändringar gäller nästa inbjudan eller svar.",
+              account.user
+                ? "Din profil sparas på ditt konto. Namn och bild visas för alla med länken när du skapar ett häng eller svarar. Ändringar gäller nästa inbjudan eller svar."
+                : "Din profil sparas i den här webbläsaren. Namn och bild visas för alla med länken när du skapar ett häng eller svarar. Ändringar gäller nästa inbjudan eller svar.",
             )}
           </p>
+          {account.user && localProfile.name && (
+            <button
+              type="button"
+              className="text-button profile-import"
+              disabled={loading}
+              onClick={() => change(localProfile)}
+            >
+              {t("Använd profilen från den här enheten")}
+            </button>
+          )}
           {error && (
             <p role="alert" className="hang-error">
               {t(error)}
@@ -183,6 +289,11 @@ function Profile({ returnTo, canExplore }) {
       {canExplore && (
         <section className="profile-meetups">
           <h2>{t("Mina häng")}</h2>
+          <p className="profile-hint">
+            {t(
+              "Häng och svar hanteras fortfarande från webbläsaren där du skapade dem.",
+            )}
+          </p>
           {mine.length ? (
             mine.map((h) => (
               <Link href={`/hang/${h.id}`} key={h.id}>
@@ -204,17 +315,33 @@ function Profile({ returnTo, canExplore }) {
         </section>
       )}
       <p className="profile-local-note">
+        <Link href={`/privacy?lang=${locale}`}>{t("Din integritet")}</Link>
+      </p>
+      <p className="profile-local-note">
         {t(
-          "Ingen inloggning behövs. Profilen följer inte automatiskt med till andra webbläsare eller enheter.",
+          account.user
+            ? "Du väljer vad du delar. Din e-post visas aldrig för andra deltagare."
+            : "Ingen inloggning behövs. Profilen följer inte automatiskt med till andra webbläsare eller enheter.",
         )}
       </p>
     </main>
   );
 }
+function ReadyProfile(props) {
+  const account = useAccount();
+  const { t } = useLanguage();
+  if (account.loading)
+    return (
+      <p className="app-loading" role="status">
+        {t("Hämtar profil…")}
+      </p>
+    );
+  return <Profile key={account.user?.id || "guest"} {...props} />;
+}
 export default function ProfilePage(props) {
   return (
     <LanguageProvider>
-      <Profile {...props} />
+      <ReadyProfile {...props} />
     </LanguageProvider>
   );
 }

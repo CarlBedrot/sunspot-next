@@ -21,7 +21,8 @@
     "test:i18n": "node scripts/verify-i18n.mjs",
     "test:share": "node scripts/verify-hangs.mjs",
     "test:hangs": "node scripts/verify-hangs.mjs",
-    "test:profile": "node scripts/verify-profile.mjs"
+    "test:profile": "node scripts/verify-profile.mjs",
+    "test:account": "node scripts/verify-account.mjs"
   },
   "dependencies": {
     "date-fns": "^4.4.0",
@@ -29,6 +30,7 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^1.46.0",
     "next": "16.3.5",
+    "next-auth": "^5.0.0-beta.32",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sharp": "^0.35.4",

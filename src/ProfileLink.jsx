@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { useState } from "react";
 import { useLanguage } from "./Language.jsx";
-import { readProfile } from "./profile.js";
+import { useAccount } from "./Account.jsx";
 import Avatar from "./Avatar.jsx";
 export default function ProfileLink({ returnTo = "/", className = "" }) {
   const { t } = useLanguage();
-  const [profile] = useState(readProfile);
+  const { profile } = useAccount();
   return (
     <Link
       href={`/profile${returnTo === "/" ? "" : `?returnTo=${encodeURIComponent(returnTo)}`}`}

@@ -1,3 +1,4 @@
+import { AccountProvider } from "../Account.jsx";
 import type { Metadata } from "next";
 import "leaflet/dist/leaflet.css";
 import "../styles.css";
@@ -16,7 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="sv">
-      <body>{children}</body>
+      <body>
+        <AccountProvider>{children}</AccountProvider>
+      </body>
     </html>
   );
 }
