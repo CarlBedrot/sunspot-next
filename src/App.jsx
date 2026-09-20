@@ -25,6 +25,7 @@ import {
   X,
 } from "lucide-react";
 import { readHangLocal } from "./hangs.js";
+import ProfileLink from "./ProfileLink.jsx";
 import PlaceShare from "./PlaceShare.jsx";
 import NearbyPlaces from "./NearbyPlaces.jsx";
 import {
@@ -599,6 +600,7 @@ function SunspotApp() {
                 >
                   <List size={19} />
                 </button>
+                <ProfileLink className="toolbar-button" />
               </div>
               <div className="activity-tabs">
                 {categories.map(({ id, label, icon: Icon }) => (

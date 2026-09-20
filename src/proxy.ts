@@ -5,6 +5,7 @@ export function proxy(request: NextRequest) {
     process.env.SUNSPOT_RECIPIENT_ONLY === "1" &&
     path !== "/" &&
     path !== "/favicon.svg" &&
+    path !== "/profile" &&
     !path.startsWith("/hang/") &&
     !path.startsWith("/api/hangs/") &&
     path !== "/api/hangs" &&

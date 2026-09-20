@@ -1,3 +1,5 @@
+import { readProfile, rememberProfileName } from "./profile.js";
+import Avatar from "./Avatar.jsx";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X, ArrowUpRight } from "lucide-react";
@@ -24,16 +26,16 @@ export default function HangCreate({
   const { t, locale } = useLanguage();
   const router = useRouter();
   const dialog = useRef(null);
+  const [profile] = useState(readProfile);
   const [draft] = useState(() => {
     const saved = readHangLocal("pending");
     return saved?.placeId === place.id ? saved : null;
   });
 
-  const [host, setHost] = useState(
-    () => draft?.body?.host || readHangLocal("name", ""),
-  );
+  const [host, setHost] = useState(() => draft?.body?.host || profile.name);
   const [activity, setActivity] = useState(
     draft?.body?.activity ||
+      profile.activity ||
       (place.category === "bar"
         ? "beer"
         : place.category === "restaurant"
@@ -65,6 +67,7 @@ export default function HangCreate({
       if (!attempt.current)
         attempt.current = {
           host,
+          photo: profile.photo,
           activity,
           placeId: place.id,
           duration,
@@ -100,7 +103,7 @@ export default function HangCreate({
         throw Error(
           "Tillåt lokal lagring i webbläsaren för att skapa ett häng.",
         );
-      writeHangLocal("name", h.host);
+      rememberProfileName(h.host);
       writeHangLocal("pending", null);
       router.push(`/hang/${h.id}`);
     } catch (err) {
@@ -132,6 +135,12 @@ export default function HangCreate({
         </button>
       </div>
       <h2>{place.name}</h2>
+      {profile.photo && (
+        <div className="profile-create-identity">
+          <Avatar name={host} photo={profile.photo} />
+          <span>{host}</span>
+        </div>
+      )}
       <p className="hang-muted">
         {start
           ? `${hangDate(start, locale)} · ${hangTime(start, locale)}`
@@ -181,7 +190,7 @@ export default function HangCreate({
         </label>
         <p className="hang-privacy">
           {t(
-            "Alla med länken kan se platsen, ditt förnamn och vilka som kommer. Hänget avslutas automatiskt.",
+            "Alla med länken kan se platsen, ditt namn, din bild och vilka som kommer. Hänget avslutas automatiskt.",
           )}
         </p>
         {error && (

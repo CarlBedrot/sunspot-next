@@ -21,6 +21,9 @@ import {
   hangTime,
   hangDate,
 } from "./hangs.js";
+import { readProfile, rememberProfileName } from "./profile.js";
+import ProfileLink from "./ProfileLink.jsx";
+import Avatar from "./Avatar.jsx";
 import { placeMapsUrl } from "./placeShare.js";
 
 function Hang({ id, canExplore }) {
@@ -29,7 +32,8 @@ function Hang({ id, canExplore }) {
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [fatal, setFatal] = useState(false);
-  const [name, setName] = useState(() => readHangLocal("name", "")),
+  const [profile] = useState(readProfile);
+  const [name, setName] = useState(() => profile.name),
     [joining, setJoining] = useState(false),
     [feedback, setFeedback] = useState(""),
     [manual, setManual] = useState("");
@@ -104,12 +108,15 @@ function Hang({ id, canExplore }) {
         );
       const data = await hangRequest(`/${id}/${action}`, {
         token: credential,
-        body,
+        body:
+          action === "rsvp" && body.coming
+            ? { ...body, photo: profile.photo }
+            : body,
       });
       accept(data);
       if (data.isHost) rememberHang(data, credential);
       if (action === "rsvp") {
-        writeHangLocal("name", name.trim());
+        rememberProfileName(name.trim());
         setJoining(false);
       }
       return true;
@@ -155,7 +162,10 @@ function Hang({ id, canExplore }) {
           <Sun size={24} />
           SunSpot
         </Link>
-        <LanguageSelect />
+        <div className="hang-header-actions">
+          <LanguageSelect />
+          <ProfileLink returnTo={`/hang/${id}`} />
+        </div>
       </header>
       {!h || fatal ? (
         <section className="hang-card hang-empty">
@@ -217,9 +227,9 @@ function Hang({ id, canExplore }) {
               <>
                 <div className="hang-guests" aria-live="polite">
                   <div className="hang-avatars">
-                    <span>{h.host.slice(0, 1).toUpperCase()}</span>
+                    <Avatar name={h.host} photo={h.hostPhoto} />
                     {h.guests.slice(0, 4).map((g) => (
-                      <span key={g.id}>{g.name.slice(0, 1).toUpperCase()}</span>
+                      <Avatar key={g.id} name={g.name} photo={g.photo} />
                     ))}
                   </div>
                   <p>
@@ -368,7 +378,7 @@ function Hang({ id, canExplore }) {
             <p>{t("Mer tillsammans. Mindre planerande.")}</p>
             <small>
               {t(
-                "Inget konto behövs. Alla med länken kan se förnamn och svar. Uppgifterna tas bort ett dygn efter sluttiden.",
+                "Inget konto behövs. Alla med länken kan se namn, bilder och svar. Uppgifterna tas bort ett dygn efter sluttiden.",
               )}
             </small>
             {canExplore && (

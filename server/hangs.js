@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { places } from "../src/places.js";
+import { normalizeProfilePhoto } from "./profile-photo.js";
 import { hangStore } from "./hang-store.js";
 const HOUR = 3600000,
   DAY = 24 * HOUR;
@@ -35,6 +36,9 @@ function view(h, secret, now, publicOrigin) {
   return {
     id: h.id,
     host: h.host,
+    hostPhoto: h.hostPhoto
+      ? `/api/hangs/${h.id}/photo?v=${hash(h.hostPhoto).slice(0, 12)}`
+      : null,
     activity: h.activity,
     startsAt: h.startsAt,
     endsAt: h.endsAt,
@@ -48,7 +52,13 @@ function view(h, secret, now, publicOrigin) {
       lng: p.lng,
       category: p.category,
     },
-    guests: h.guests.map((g) => ({ id: g.id, name: g.name })),
+    guests: h.guests.map((g) => ({
+      id: g.id,
+      name: g.name,
+      photo: g.photo
+        ? `/api/hangs/${h.id}/photo?guest=${g.id}&v=${hash(g.photo).slice(0, 12)}`
+        : null,
+    })),
     isHost: identity === h.hostHash,
     joined: h.guests.some((g) => g.hash === identity),
     sunUntil: h.sunUntil,
@@ -67,7 +77,7 @@ async function readBody(req) {
     const { done, value } = await reader.read();
     if (done) break;
     size += value.length;
-    if (size > 4096) {
+    if (size > 32768) {
       await reader.cancel();
       fail(413, "För mycket text.");
     }
@@ -124,6 +134,25 @@ export function createHangApi({
         fail(401, "Den här webbläsaren saknar behörighet.");
       if (path.length > 2 || (id && !idPattern.test(id)))
         fail(404, "Hänget finns inte längre.");
+      if (req.method === "GET" && id && action === "photo") {
+        const raw = await store.get(id);
+        if (!raw) fail(404, "Hänget finns inte längre.");
+        const h = JSON.parse(raw),
+          guest = url.searchParams.get("guest");
+        const photo = guest
+          ? h.guests.find((g) => g.id === guest)?.photo
+          : h.hostPhoto;
+        if (!photo) fail(404, "Bilden finns inte längre.");
+        return new Response(Buffer.from(photo, "base64"), {
+          headers: {
+            "Content-Type": "image/jpeg",
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+            "X-Robots-Tag": "noindex, nofollow",
+            "Referrer-Policy": "no-referrer",
+          },
+        });
+      }
       if (req.method === "GET" && id && !action) {
         const raw = await store.get(id);
         if (!raw) fail(404, "Hänget finns inte längre.");
@@ -183,6 +212,7 @@ export function createHangApi({
         const hang = {
           id: hangId,
           host: name(body.host),
+          hostPhoto: await normalizeProfilePhoto(body.photo),
           hostHash: hash(secret),
           placeId: body.placeId,
           activity: body.activity,
@@ -199,6 +229,10 @@ export function createHangApi({
       }
       if (!["rsvp", "extend", "close"].includes(action))
         fail(404, "Åtgärden finns inte.");
+      const photo =
+        action === "rsvp" && body.coming === true
+          ? await normalizeProfilePhoto(body.photo)
+          : null;
       const updated = await transact(id, (h) => {
         if (!h) fail(404, "Hänget finns inte längre.");
         const identity = hash(secret);
@@ -232,6 +266,7 @@ export function createHangApi({
               id: hash(`${id}:${secret}`).slice(0, 16),
               hash: identity,
               name: name(body.name),
+              photo,
             });
           }
           h.guests = other;

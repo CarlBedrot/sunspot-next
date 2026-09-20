@@ -3625,3 +3625,268 @@ textarea {
     font-size: 32px;
   }
 }
+
+/* Profiles reuse the compact invitation palette. */
+.profile-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--sky);
+  color: var(--ink);
+  font-weight: 750;
+  font-size: 14px;
+  line-height: 1;
+}
+.profile-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+}
+.profile-link.toolbar-button {
+  padding: 4px;
+}
+.profile-link .profile-avatar {
+  width: 30px;
+  height: 30px;
+}
+.hang-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hang-avatars .profile-avatar {
+  width: 30px;
+  height: 30px;
+  font-size: 11px;
+}
+.profile-page {
+  padding-top: max(18px, env(safe-area-inset-top));
+}
+.profile-header {
+  max-width: 460px;
+  margin: 0 auto 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profile-header-spacer {
+  width: 40px;
+}
+.profile-card,
+.profile-settings,
+.profile-meetups {
+  max-width: 460px;
+  margin: 0 auto 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  padding: 25px;
+}
+.profile-card h1 {
+  font:
+    800 34px "Manrope",
+    sans-serif;
+  letter-spacing: -1.3px;
+  margin: 6px 0 22px;
+}
+.profile-card h1 > span {
+  color: var(--blue);
+}
+.profile-card form {
+  display: grid;
+  gap: 22px;
+}
+.profile-photo-editor {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 3px;
+}
+.profile-photo-button {
+  position: relative;
+  padding: 0;
+  flex-shrink: 0;
+}
+.profile-photo-button > .profile-avatar {
+  width: 88px;
+  height: 88px;
+  font-size: 36px;
+}
+.profile-photo-button .profile-avatar svg {
+  width: 36px;
+  height: 36px;
+}
+.profile-camera {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: var(--yellow);
+}
+.profile-photo-editor .text-button {
+  font-size: 13px;
+  font-weight: 650;
+  min-height: 32px;
+}
+.profile-photo-editor p {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.profile-photo-editor .profile-remove {
+  font-size: 11px;
+  font-weight: 450;
+  color: var(--muted);
+  text-decoration: underline;
+}
+.profile-card label {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 550;
+}
+.profile-card input {
+  min-height: 48px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 16px;
+}
+.profile-card fieldset {
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  margin: 0;
+}
+.profile-card legend {
+  font-size: 13px;
+  font-weight: 550;
+  margin-bottom: 10px;
+}
+.profile-card .primary {
+  min-height: 48px;
+  border-radius: 14px;
+}
+.profile-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 9px;
+}
+.profile-privacy,
+.profile-local-note {
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.profile-local-note {
+  text-align: center;
+  max-width: 390px;
+  margin: 22px auto 0;
+  padding: 0 12px;
+}
+.profile-settings .language-select {
+  justify-content: space-between;
+  font-size: 14px;
+}
+.profile-settings .language-select select {
+  font-size: 14px;
+}
+.profile-meetups h2 {
+  font:
+    750 18px "Manrope",
+    sans-serif;
+  margin-bottom: 14px;
+}
+.profile-meetups > a:not(.text-button) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.profile-meetups strong {
+  display: block;
+  font-size: 14px;
+}
+.profile-meetups small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.profile-meetups p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.profile-meetups .text-button {
+  display: inline-flex;
+  margin-top: 17px;
+  font-size: 13px;
+}
+.profile-saved {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.profile-saved a {
+  font-weight: 650;
+  text-decoration: underline;
+}
+.profile-create-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  margin: 10px 0;
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+@media (max-width: 360px) {
+  .profile-card,
+  .profile-settings,
+  .profile-meetups {
+    padding: 20px;
+  }
+  .map-search-row {
+    gap: 6px;
+  }
+  .map-search-row .toolbar-button {
+    width: 38px;
+    min-width: 38px;
+  }
+  .profile-photo-editor {
+    gap: 12px;
+  }
+}

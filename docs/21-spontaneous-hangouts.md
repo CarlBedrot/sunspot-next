@@ -11,7 +11,7 @@ SunSpot now supports “I’m here. Come by.” year-round. Sunshine is optional
 5. Guests can withdraw their own response. The host sees replies on refresh or within 30 seconds while visible, extends by 30 minutes (maximum six hours total), or ends the hangout.
 6. Expired/ended invitations cannot accept responses or be extended. No “someone is here” claim remains. Data expires 24 hours after the scheduled end.
 
-Swedish, Danish and English are supported. Language choices persist locally. Host and guest credentials stay in their original browser; clearing browser storage loses management access. An invitation link never contains these credentials or a private Vercel access token. First names and attendance are visible to anyone holding the link, as disclosed before creation/joining.
+Swedish, Danish and English are supported. Language choices persist locally. Host and guest credentials stay in their original browser; clearing browser storage loses management access. An invitation link never contains these credentials or a private Vercel access token. Names, profile photos and attendance are visible to anyone holding the link, as disclosed before creation/joining.
 
 ## Storage and deployment
 
@@ -24,7 +24,7 @@ Swedish, Danish and English are supported. Language choices persist locally. Hos
 - `SUNSPOT_PUBLIC_HANG_ORIGIN=https://sunspot-hangouts.vercel.app` in both projects ensures only public invitation links are shared.
 - Required server-only storage variables: `KV_REST_API_URL` and `KV_REST_API_TOKEN` (or `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`). Never use `NEXT_PUBLIC_` for credentials.
 - APIs and invitation pages are no-store/noindex; mutation origins must match the requesting app. No cross-origin CORS or in-memory production fallback.
-- Creation is idempotent per browser-generated token; tokens are SHA-256 hashed in Redis. RSVP edits, closure and extension use CAS, preventing lost concurrent updates. Body size 4KB, names 32 characters, 50 guests per hang. Mutation limits are 60 per credential/hang per ten minutes and 100 creates per ten minutes deployment-wide.
+- Creation is idempotent per browser-generated token; tokens are SHA-256 hashed in Redis. RSVP edits, closure and extension use CAS, preventing lost concurrent updates. Body size 32KB (including a bounded profile thumbnail), names 32 characters, 50 guests per hang. Mutation limits are 60 per credential/hang per ten minutes and 100 creates per ten minutes deployment-wide.
 
 Local: `npm ci`, `vercel env pull .env.local`, `npm run dev`. Without Redis credentials, local data uses `.data/hangs.sqlite`. Host management happens on the private origin; friends use the public origin. Local testing without the configured public origin uses local invitation links.
 
