@@ -48,3 +48,11 @@ Appkod `5397fcd`, produktion `dpl_3vpoovHxE6FNHUCZpLCT6xZPH7mi`, status READY p�
 58 tester, lint och produktionsbygge passerade. Samtliga sex browserkontroller (browser, solar, events, map, nearby, i18n) passerade lokalt; ett första soltest fick timeout vid kartinläsning, omkörningen passerade. Språkprovet passerade även på preview och den stabila produktionsadressen: engelska/danska/svenska, sparat val, bevarad dag/tid/kategori, platskort, områdesval och liten mobilvy. Inga sidfel. Karttestet registrerade 0 långa huvudtrådsuppgifter och identisk skuggbild mellan worker och fallback. Fysisk iPhone är inte verifierad.
 
 Oinloggad startsida och väder-API returnerar fortsatt 302, och projektets skydd är kvar på `all`. Ingen delningslänk eller väninbjudan har skapats. [Guide för språk, tre testare och platskort](19-languages-and-sharing.md).
+
+## Kompakt platskort och direktdelning — 2026-09-20
+
+Appkod `4a62eae`, produktion `dpl_8GYtdSBernogYKifpj56oWpQBbBm`, status READY på den stabila adressen. Skyddad preview `dpl_AEvwaU3jJAaBofh9Pfe7m3pQ9SXb` verifierades före promotion. Den tidigare skapade delningslänken fungerar även efter denna publicering; token lagras inte i repot.
+
+46 tester, lint och produktionsbygge passerade. Browserkontroller för delning, hela appen inklusive lokala inbjudningar, språk och solbevakning passerade. Det lokala inbjudningstestet kördes med localhost för att matcha serverns origin-kontroll; 127.0.0.1 gav korrekt 403. Delningssviten passerade även på skyddad preview. Kortet mäter 284 px i mobiltestet (390 × 844); CTA är åtkomlig även vid 390 × 667. Slutkontroll på produktion via befintlig delningslänk bekräftade kompakt kort, Maps-länk, gömda detaljer, väder-API 200 och inga sidfel. Oinloggad åtkomst utan delningslänk returnerar fortfarande 302. Faktisk iOS-delning återstår att verifiera på fysisk mobil.
+
+[Flöde och begränsningar](20-compact-place-sharing.md). Ändringen ligger också i den öppna pull requesten till `lveggers/sunspot`.
