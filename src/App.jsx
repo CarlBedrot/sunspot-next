@@ -24,6 +24,7 @@ import {
   Wind,
   X,
 } from "lucide-react";
+import PlaceShare from "./PlaceShare.jsx";
 import NearbyPlaces from "./NearbyPlaces.jsx";
 import {
   venueEvidence,
@@ -636,7 +637,11 @@ function SunspotApp() {
               onPointChange={choosePoint}
             >
               {detailOpen && !activeEvent && (
-                <article className="detail-card" aria-label={t("Vald plats")}>
+                <article
+                  key={selected.id}
+                  className="detail-card compact-place-card"
+                  aria-label={t("Vald plats")}
+                >
                   <button
                     className="detail-close icon-button"
                     aria-label={t("Stäng plats")}
@@ -659,45 +664,58 @@ function SunspotApp() {
                     {selected.name}
                     <span>{selected.emoji}</span>
                   </h2>
-                  <div className="sun-window">
+                  <div
+                    className="compact-sun"
+                    data-state={
+                      solar.pending ? "unknown" : result?.state || "unknown"
+                    }
+                  >
+                    <Sun size={19} />
                     <div>
-                      <Sun size={22} />
-                      <span>
-                        {selected.category === "park"
-                          ? t("Parkens provpunkter")
-                          : t("Vald utomhuspunkt")}
-                        <strong>
-                          {solar.pending
-                            ? t("Beräknar solläge…")
-                            : t(solarLabel(result))}
-                        </strong>
-                      </span>
+                      <strong>
+                        {solar.pending
+                          ? t("Beräknar solläge…")
+                          : t(solarLabel(result))}
+                      </strong>
+                      <small>
+                        {live
+                          ? t("Beräknat nu · moln kan skymma solen")
+                          : t("Beräknat för {0} · {1}", [date, clock(instant)])}
+                      </small>
                     </div>
                   </div>
-                  <div className="place-confidence">
-                    <p>
-                      {selected.category === "park"
-                        ? t("Delvis sol · trädskuggor ingår inte")
-                        : t(terraceLabel(selected))}
-                    </p>
-                    {selected.category !== "park" && (
-                      <p>
-                        {result?.pointSource === "chosen"
-                          ? t("Din valda punkt")
-                          : t("Uppskattad sittpunkt")}{" "}
-                        {t("· inte fältverifierad")}
-                      </p>
-                    )}
-                    <p>
-                      {t("Prognos:")}{" "}
-                      {forecast
-                        ? `${Math.round(forecast.temperature)}° · ${t(weatherText(forecast.symbol))}`
-                        : t("saknas")}{" "}
-                      {t("· separat från byggnadssol")}
-                    </p>
-                  </div>
+                  <PlaceShare
+                    key={`${selected.id}:${instant}:${locale}`}
+                    place={selected}
+                    result={result}
+                    instant={instant}
+                    live={live}
+                    pending={solar.pending}
+                  />
                   <details className="place-more">
-                    <summary>{t("Mer om platsen")}</summary>
+                    <summary>{t("Mer info")}</summary>
+                    <div className="place-confidence">
+                      <p>
+                        {selected.category === "park"
+                          ? t("Delvis sol · trädskuggor ingår inte")
+                          : t(terraceLabel(selected))}
+                      </p>
+                      {selected.category !== "park" && (
+                        <p>
+                          {result?.pointSource === "chosen"
+                            ? t("Din valda punkt")
+                            : t("Uppskattad sittpunkt")}{" "}
+                          {t("· inte fältverifierad")}
+                        </p>
+                      )}
+                      <p>
+                        {t("Prognos:")}{" "}
+                        {forecast
+                          ? `${Math.round(forecast.temperature)}° · ${t(weatherText(forecast.symbol))}`
+                          : t("saknas")}{" "}
+                        {t("· separat från byggnadssol")}
+                      </p>
+                    </div>
                     <p className="detail-description">
                       {t(selected.description)}
                     </p>
@@ -784,14 +802,13 @@ function SunspotApp() {
                         {t(result?.opening.label) || t("Öppettider okända")}
                       </span>
                     </div>
+                    <button
+                      className="text-button plan-place-action"
+                      onClick={() => setModal("create")}
+                    >
+                      {t("Planera en träff")} <ArrowUpRight size={15} />
+                    </button>
                   </details>
-                  <button
-                    className="primary wide"
-                    onClick={() => setModal("create")}
-                  >
-                    {t("Ses här med vänner")}
-                    <ArrowUpRight size={20} />
-                  </button>
                 </article>
               )}
               {watchId && (

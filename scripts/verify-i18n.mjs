@@ -71,7 +71,7 @@ try {
   await expect(page.locator(".detail-card")).toContainText(
     "Estimated seating point",
   );
-  await page.getByText("More about this place", { exact: true }).click();
+  await page.getByText("More info", { exact: true }).click();
   await expect(page.locator(".place-more")).toContainText("2026-09-17");
   await page.screenshot({ path: "artifacts/language-english-place.png" });
   await page.getByRole("button", { name: "Close place", exact: true }).click();

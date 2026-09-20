@@ -82,7 +82,7 @@ try {
   await time(16);
   await page.getByRole("button", { name: "Bar", exact: true }).click();
   await choose("Ølbaren");
-  await page.getByText("Mer om platsen", { exact: true }).click();
+  await page.getByText("Mer info", { exact: true }).click();
   await page
     .getByRole("button", { name: "Välj min sittplats på kartan", exact: true })
     .click();

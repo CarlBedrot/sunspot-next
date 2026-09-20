@@ -22,7 +22,9 @@ try {
   await page.addInitScript(() =>
     localStorage.setItem("sunspot:demo-events", "true"),
   );
-  await page.addInitScript(() => localStorage.setItem("sunspot:language", "sv"));
+  await page.addInitScript(() =>
+    localStorage.setItem("sunspot:language", "sv"),
+  );
   await page.clock.setSystemTime(new Date("2026-09-21T12:00:00Z"));
   await page.goto(base, { waitUntil: "domcontentloaded" });
   await ready();
@@ -129,8 +131,9 @@ try {
     .locator(".place-list")
     .getByRole("heading", { name: "Kayak Bar", exact: true })
     .click();
+  await page.getByText("Mer info", { exact: true }).click();
   await page
-    .getByRole("button", { name: "Ses här med vänner", exact: true })
+    .getByRole("button", { name: "Planera en träff", exact: true })
     .click();
   await page
     .getByRole("textbox", { name: "Ditt namn", exact: true })
@@ -145,7 +148,9 @@ try {
   });
   const guest = await guestContext.newPage();
   guest.on("pageerror", (e) => errors.push(e.message));
-  await guest.addInitScript(() => localStorage.setItem("sunspot:language", "sv"));
+  await guest.addInitScript(() =>
+    localStorage.setItem("sunspot:language", "sv"),
+  );
   await guest.goto(page.url(), { waitUntil: "domcontentloaded" });
   await guest
     .getByRole("textbox", { name: "Ditt namn", exact: true })

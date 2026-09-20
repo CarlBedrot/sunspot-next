@@ -18,7 +18,8 @@
     "data:event-locations": "node scripts/import-event-locations.mjs",
     "test:map": "node scripts/verify-map-performance.mjs",
     "test:nearby": "node scripts/verify-nearby.mjs",
-    "test:i18n": "node scripts/verify-i18n.mjs"
+    "test:i18n": "node scripts/verify-i18n.mjs",
+    "test:share": "node scripts/verify-place-share.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

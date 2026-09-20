@@ -3133,3 +3133,94 @@ textarea {
   margin: 16px auto 0;
   padding: 0 20px;
 }
+
+/* One glance, one invitation. Details stay available behind a disclosure. */
+.map-workspace .compact-place-card h2 {
+  margin: 8px 0 12px;
+  padding-right: 6px;
+}
+.compact-sun {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  margin: 0 0 16px;
+}
+.compact-sun > svg {
+  flex: 0 0 auto;
+  color: var(--ink);
+}
+.compact-sun > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.compact-sun strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+.compact-sun small {
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.compact-sun[data-state="shade"] > svg,
+.compact-sun[data-state="unknown"] > svg {
+  color: var(--muted);
+}
+.map-workspace .share-place-action {
+  min-height: 48px;
+  font-size: 14px;
+}
+.place-share-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.place-share-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+  color: var(--ink);
+}
+.compact-place-card .place-more {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.compact-place-card .place-more summary {
+  padding: 12px 0 2px;
+  min-height: 38px;
+  font-size: 12px;
+}
+.compact-place-card .place-more[open] summary {
+  padding-bottom: 10px;
+}
+.compact-place-card .plan-place-action {
+  margin-top: 12px;
+  min-height: 44px;
+}
+.share-feedback {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+.share-manual textarea {
+  width: 100%;
+  resize: vertical;
+  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--ink);
+  background: var(--surface);
+}
+@media (max-width: 760px) {
+  .map-shell:has(.compact-place-card) .map-tools-toggle,
+  .map-shell:has(.compact-place-card) .map-tools {
+    display: none;
+  }
+}

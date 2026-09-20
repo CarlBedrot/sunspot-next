@@ -108,7 +108,7 @@ try {
   await expect(page.locator(".place-confidence")).toContainText(
     "Uppskattad sittpunkt",
   );
-  await page.getByText("Mer om platsen", { exact: true }).click();
+  await page.getByText("Mer info", { exact: true }).click();
   await expect(page.locator(".place-more")).toContainText("2026-09-17");
   await page.getByRole("button", { name: "Stäng plats", exact: true }).click();
   await page.getByRole("button", { name: "Alla", exact: true }).click();
